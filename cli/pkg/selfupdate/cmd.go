@@ -36,6 +36,7 @@ var (
 	cliUpdateVersion string
 	cliUpdateTarget  string
 	cliUpdateDryRun  bool
+	cliUpdateVerbose bool
 	jsonOutput       bool
 )
 
@@ -101,6 +102,7 @@ func registerCLIUpdateFlagsInternal(cmd *cobra.Command) {
 	cmd.Flags().StringVar(&cliUpdateVersion, "version", "", "Stable release tag to install (default: latest)")
 	cmd.Flags().StringVar(&cliUpdateTarget, "target", "", "Binary path to replace (default: current executable)")
 	cmd.Flags().BoolVar(&cliUpdateDryRun, "dry-run", false, "Check for an update without installing it")
+	cmd.Flags().BoolVar(&cliUpdateVerbose, "verbose", false, "Print self-update resolution details")
 	cmd.Flags().BoolVar(&jsonOutput, "json", false, "Output in JSON format")
 }
 
@@ -192,6 +194,7 @@ func buildCLIUpdatePlanInternal(ctx context.Context, overrideChannel string) (*c
 	if channel != cliUpdateChannelNext && channel != cliUpdateChannelStable {
 		return nil, fmt.Errorf("invalid update channel %q (expected next or stable)", channel)
 	}
+	verboseCLIUpdateInternal("channel=%s target=%s platform=%s/%s", channel, targetPath, runtime.GOOS, runtime.GOARCH)
 
 	currentSHA, err := sha256FileInternal(targetPath)
 	if err != nil {
@@ -276,16 +279,23 @@ func resolveNextCLIUpdateInternal(ctx context.Context) (*cliUpdatePlan, error) {
 	if err != nil {
 		return nil, err
 	}
-	checksumPath, err := cliRawChecksumPathInternal()
+	platformName, err := cliPlatformNameInternal()
 	if err != nil {
 		return nil, err
 	}
 	checksumURL := joinURLPathInternal(baseURL, "arcane-cli_checksums.txt")
+	artifactURL := joinURLPathInternal(baseURL, artifactName)
+	verboseCLIUpdateInternal("next base URL: %s", baseURL)
+	verboseCLIUpdateInternal("next artifact URL: %s", artifactURL)
+	verboseCLIUpdateInternal("next checksum URL: %s", checksumURL)
+	verboseCLIUpdateInternal("next checksum candidates: %s", strings.Join([]string{artifactName, platformName}, ", "))
+
 	checksums, err := fetchTextInternal(ctx, checksumURL)
 	if err != nil {
 		return nil, err
 	}
-	expectedSHA, err := findChecksumInternal(checksums, checksumPath, artifactName)
+	verboseCLIUpdateInternal("next checksum entries: %s", strings.Join(checksumEntryNamesInternal(checksums), ", "))
+	expectedSHA, err := findChecksumInternal(checksums, artifactName, platformName)
 	if err != nil {
 		return nil, err
 	}
@@ -293,7 +303,7 @@ func resolveNextCLIUpdateInternal(ctx context.Context) (*cliUpdatePlan, error) {
 	return &cliUpdatePlan{
 		Version:      "next",
 		ArtifactName: artifactName,
-		ArtifactURL:  joinURLPathInternal(baseURL, artifactName),
+		ArtifactURL:  artifactURL,
 		ChecksumURL:  checksumURL,
 		ArtifactSHA:  expectedSHA,
 		ExpectedSHA:  expectedSHA,
@@ -325,10 +335,17 @@ func resolveStableCLIUpdateInternal(ctx context.Context) (*cliUpdatePlan, error)
 	checksumName := fmt.Sprintf("arcane_%s_checksums.txt", strings.TrimPrefix(version, "v"))
 	versionBaseURL := joinURLPathInternal(baseURL, version)
 	checksumURL := joinURLPathInternal(versionBaseURL, checksumName)
+	artifactURL := joinURLPathInternal(versionBaseURL, artifactName)
+	verboseCLIUpdateInternal("stable version: %s", version)
+	verboseCLIUpdateInternal("stable artifact URL: %s", artifactURL)
+	verboseCLIUpdateInternal("stable checksum URL: %s", checksumURL)
+	verboseCLIUpdateInternal("stable checksum candidates: %s", artifactName)
+
 	checksums, err := fetchTextInternal(ctx, checksumURL)
 	if err != nil {
 		return nil, err
 	}
+	verboseCLIUpdateInternal("stable checksum entries: %s", strings.Join(checksumEntryNamesInternal(checksums), ", "))
 	artifactSHA, err := findChecksumInternal(checksums, artifactName)
 	if err != nil {
 		return nil, err
@@ -337,7 +354,7 @@ func resolveStableCLIUpdateInternal(ctx context.Context) (*cliUpdatePlan, error)
 	return &cliUpdatePlan{
 		Version:      version,
 		ArtifactName: artifactName,
-		ArtifactURL:  joinURLPathInternal(versionBaseURL, artifactName),
+		ArtifactURL:  artifactURL,
 		ChecksumURL:  checksumURL,
 		ArtifactSHA:  artifactSHA,
 	}, nil
@@ -346,6 +363,9 @@ func resolveStableCLIUpdateInternal(ctx context.Context) (*cliUpdatePlan, error)
 func cliUpdateNeededInternal(channel, currentSHA, expectedSHA, remoteVersion string) bool {
 	if channel == cliUpdateChannelStable {
 		return normalizeVersionInternal(config.Version) != normalizeVersionInternal(remoteVersion)
+	}
+	if strings.TrimSpace(expectedSHA) == "" {
+		return true
 	}
 	return !strings.EqualFold(currentSHA, expectedSHA)
 }
@@ -369,11 +389,19 @@ func fetchLatestGitHubReleaseInternal(ctx context.Context) (string, error) {
 }
 
 func cliRawArtifactNameInternal() (string, error) {
+	platformName, err := cliPlatformNameInternal()
+	if err != nil {
+		return "", err
+	}
+	return "arcane-cli_" + platformName, nil
+}
+
+func cliPlatformNameInternal() (string, error) {
 	arch, err := cliArtifactArchInternal()
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("arcane-cli_%s_%s", runtime.GOOS, arch), nil
+	return fmt.Sprintf("%s_%s", runtime.GOOS, arch), nil
 }
 
 func cliArchiveArtifactNameInternal() (string, error) {
@@ -382,21 +410,6 @@ func cliArchiveArtifactNameInternal() (string, error) {
 		return "", err
 	}
 	return fmt.Sprintf("arcane-cli_%s_%s.tar.gz", runtime.GOOS, arch), nil
-}
-
-func cliRawChecksumPathInternal() (string, error) {
-	switch runtime.GOARCH {
-	case "amd64":
-		return fmt.Sprintf("arcane-cli_%s_amd64_v1/arcane-cli", runtime.GOOS), nil
-	case "arm64":
-		return fmt.Sprintf("arcane-cli_%s_arm64_v8.0/arcane-cli", runtime.GOOS), nil
-	case "386":
-		return fmt.Sprintf("arcane-cli_%s_386_sse2/arcane-cli", runtime.GOOS), nil
-	case "arm":
-		return fmt.Sprintf("arcane-cli_%s_arm_7/arcane-cli", runtime.GOOS), nil
-	default:
-		return "", fmt.Errorf("unsupported CLI update architecture %s/%s", runtime.GOOS, runtime.GOARCH)
-	}
 }
 
 func cliArtifactArchInternal() (string, error) {
@@ -570,6 +583,7 @@ func fetchTextInternal(ctx context.Context, url string) (string, error) {
 }
 
 func downloadFileInternal(ctx context.Context, url, outputPath string) error {
+	verboseCLIUpdateInternal("downloading %s to %s", url, outputPath)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return err
@@ -602,6 +616,13 @@ func downloadFileInternal(ctx context.Context, url, outputPath string) error {
 		return fmt.Errorf("failed to close download file: %w", err)
 	}
 	return nil
+}
+
+func verboseCLIUpdateInternal(format string, args ...any) {
+	if !cliUpdateVerbose {
+		return
+	}
+	fmt.Fprintf(os.Stderr, "self-update: "+format+"\n", args...)
 }
 
 func doJSONInternal(req *http.Request, out any) error {
@@ -654,6 +675,18 @@ func findChecksumInternal(checksums string, artifactNames ...string) (string, er
 		}
 	}
 	return "", fmt.Errorf("checksum for %s not found", strings.Join(artifactNames, " or "))
+}
+
+func checksumEntryNamesInternal(checksums string) []string {
+	names := make([]string, 0)
+	for _, line := range strings.Split(checksums, "\n") {
+		fields := strings.Fields(strings.TrimSpace(line))
+		if len(fields) < 2 {
+			continue
+		}
+		names = append(names, normalizeChecksumPathInternal(fields[len(fields)-1]))
+	}
+	return names
 }
 
 func normalizeChecksumPathInternal(value string) string {
