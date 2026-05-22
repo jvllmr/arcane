@@ -61,7 +61,7 @@ importers:
         version: 19.2.3(@types/react@19.2.14)
       oxfmt:
         specifier: ^0.51.0
-        version: 0.51.0(svelte@5.55.7)
+        version: 0.51.0(svelte@5.55.9)
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -263,7 +263,7 @@ importers:
         version: 25.6.2
       oxfmt:
         specifier: ^0.51.0
-        version: 0.51.0(svelte@5.55.7)
+        version: 0.51.0(svelte@5.55.9)
 
 packages:
 
@@ -5205,7 +5205,7 @@ snapshots:
       - '@emnapi/core'
       - '@emnapi/runtime'
 
-  oxfmt@0.51.0(svelte@5.55.7):
+  oxfmt@0.51.0(svelte@5.55.9):
     dependencies:
       tinypool: 2.1.0
     optionalDependencies:
@@ -5228,7 +5228,7 @@ snapshots:
       '@oxfmt/binding-win32-arm64-msvc': 0.51.0
       '@oxfmt/binding-win32-ia32-msvc': 0.51.0
       '@oxfmt/binding-win32-x64-msvc': 0.51.0
-      svelte: 5.55.7
+      svelte: 5.55.9
 
   package-manager-detector@1.6.0: {}
 
