@@ -966,10 +966,7 @@ func paginateContainerProjectGroupsInternal(
 		}
 	}
 
-	requestedPage := (params.Start / params.Limit) + 1
-	if requestedPage < 1 {
-		requestedPage = 1
-	}
+	requestedPage := max((params.Start/params.Limit)+1, 1)
 
 	// Pages are contiguous runs of whole groups: a group is never split, so the
 	// group that crosses the limit finishes its page. One walk over group sizes
