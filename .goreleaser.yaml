@@ -265,8 +265,6 @@ homebrew_casks:
       - arcane-cli
     generate_completions_from_executable:
       executable: arcane-cli
-      args:
-        - completion
       shell_parameter_format: cobra
       shells:
         - bash
