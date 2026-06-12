@@ -1063,6 +1063,9 @@ func (s *ProjectService) GetProjectDetails(ctx context.Context, projectID string
 	if opts.IncludeDirectoryFiles {
 		s.enrichWithDirectoryFiles(ctx, proj.Path, &resp)
 	}
+	if opts.IncludeProjectFiles {
+		s.enrichWithProjectFiles(ctx, proj.Path, resp.ComposeFileName, &resp)
+	}
 	s.enrichWithGitOpsInfo(ctx, proj, &resp)
 
 	// Refresh runtime status/counts even when callers do not request the full
@@ -1121,6 +1124,10 @@ func (s *ProjectService) GetProjectFileContent(ctx context.Context, projectID, r
 	if strings.TrimSpace(relativePath) == "" {
 		return project.IncludeFile{}, &common.ProjectFileBadRequestError{Err: errors.New("relative path is required")}
 	}
+	normalizedRelativePath, err := projects.NormalizeProjectRelativePath(relativePath)
+	if err != nil {
+		return project.IncludeFile{}, &common.ProjectFileForbiddenError{Err: err}
+	}
 
 	composeFile, detectErr := s.resolveProjectComposeFileInternal(ctx, proj)
 	if detectErr == nil {
@@ -1132,7 +1139,7 @@ func (s *ProjectService) GetProjectFileContent(ctx context.Context, projectID, r
 		includes, parseErr := projects.ParseIncludes(composeFile, envMap, false)
 		if parseErr == nil {
 			for _, inc := range includes {
-				if inc.RelativePath != relativePath {
+				if inc.RelativePath != normalizedRelativePath {
 					continue
 				}
 				if !projects.IsSafeSubdirectory(proj.Path, inc.Path) {
@@ -1143,16 +1150,8 @@ func (s *ProjectService) GetProjectFileContent(ctx context.Context, projectID, r
 		}
 	}
 
-	fullPath := filepath.Join(proj.Path, relativePath)
-	absProjectPath, err := filepath.Abs(proj.Path)
+	absFilePath, err := projects.ValidateIncludePathForWrite(proj.Path, normalizedRelativePath)
 	if err != nil {
-		return project.IncludeFile{}, fmt.Errorf("failed to resolve project path: %w", err)
-	}
-	absFilePath, err := filepath.Abs(fullPath)
-	if err != nil {
-		return project.IncludeFile{}, fmt.Errorf("failed to resolve file path: %w", err)
-	}
-	if !projects.IsSafeSubdirectory(absProjectPath, absFilePath) {
 		return project.IncludeFile{}, &common.ProjectFileForbiddenError{Err: errors.New("file path is outside project directory")}
 	}
 
@@ -1183,7 +1182,7 @@ func (s *ProjectService) GetProjectFileContent(ctx context.Context, projectID, r
 
 	return project.IncludeFile{
 		Path:         absFilePath,
-		RelativePath: relativePath,
+		RelativePath: normalizedRelativePath,
 		Content:      string(content),
 	}, nil
 }
@@ -1479,6 +1478,21 @@ func (s *ProjectService) enrichWithDirectoryFiles(ctx context.Context, projectPa
 	}
 
 	resp.DirectoryFiles = dirFiles
+}
+
+func (s *ProjectService) enrichWithProjectFiles(ctx context.Context, projectPath, composeFileName string, resp *project.Details) {
+	if projectPath == "" {
+		return
+	}
+
+	files, revision, err := projects.ReadProjectFileTree(projectPath, s.config.ProjectFileTreeMaxDepth, s.config.ProjectScanSkipDirs, composeFileName)
+	if err != nil {
+		slog.WarnContext(ctx, "Failed to scan project file tree", "error", err, "path", projectPath)
+		return
+	}
+
+	resp.ProjectFiles = files
+	resp.FileTreeRevision = revision
 }
 
 func (s *ProjectService) enrichWithGitOpsInfo(ctx context.Context, proj *models.Project, resp *project.Details) {
@@ -2041,7 +2055,7 @@ func (s *ProjectService) DownProject(ctx context.Context, projectID string, user
 	return nil
 }
 
-func (s *ProjectService) CreateProject(ctx context.Context, name, composeContent string, envContent *string, user models.User) (*models.Project, error) {
+func (s *ProjectService) CreateProject(ctx context.Context, name, composeContent string, envContent *string, projectFiles []project.ProjectFileDraft, user models.User) (*models.Project, error) {
 	// A top-level `name:` in the compose file is authoritative over the
 	// submitted project name.
 	if yamlName := projects.ComposeContentProjectName(composeContent); yamlName != "" {
@@ -2069,20 +2083,29 @@ func (s *ProjectService) CreateProject(ctx context.Context, name, composeContent
 		RunningCount: 0,
 	}
 
-	if err := s.db.WithContext(ctx).Create(proj).Error; err != nil {
-		return nil, fmt.Errorf("failed to create project: %w", err)
+	if err := projects.ApplyProjectFileDrafts(projectPath, projectFiles, projects.ProjectFileApplyOptions{
+		MaxDepth:        s.config.ProjectFileTreeMaxDepth,
+		SkipDirectories: s.config.ProjectScanSkipDirs,
+		ComposeFileName: projects.DefaultComposeFileName,
+	}); err != nil {
+		_ = os.RemoveAll(projectPath)
+		return nil, wrapProjectFileErrorInternal(err)
 	}
 
 	if err := s.validateComposeContentForUpdate(ctx, projectsDirectory, projectPath, name, composeContent, envContent); err != nil {
-		_ = s.db.WithContext(ctx).Delete(proj).Error
 		_ = os.RemoveAll(projectPath)
 		return nil, fmt.Errorf("invalid compose file: %w", err)
 	}
 
 	if err := projects.SaveOrUpdateProjectFiles(projectsDirectory, projectPath, composeContent, envContent); err != nil {
 		// Best-effort cleanup to restore pre-transaction behavior.
-		_ = s.db.WithContext(ctx).Delete(proj).Error
+		_ = os.RemoveAll(projectPath)
 		return nil, fmt.Errorf("failed to save project files: %w", err)
+	}
+
+	if err := s.db.WithContext(ctx).Create(proj).Error; err != nil {
+		_ = os.RemoveAll(projectPath)
+		return nil, fmt.Errorf("failed to create project: %w", err)
 	}
 	s.refreshProjectImageRefsInternal(ctx, proj)
 
@@ -2896,7 +2919,7 @@ func (s *ProjectService) RestartProject(ctx context.Context, projectID string, u
 	return nil
 }
 
-func (s *ProjectService) UpdateProject(ctx context.Context, projectID string, name *string, composeContent, envContent *string, user models.User) (*models.Project, error) {
+func (s *ProjectService) UpdateProject(ctx context.Context, projectID string, name *string, composeContent, envContent *string, fileTreeRevision *string, fileChanges []project.ProjectFileChange, user models.User) (*models.Project, error) {
 	proj, projectsDirectory, err := s.getProjectForUpdate(ctx, projectID)
 	if err != nil {
 		return nil, err
@@ -2904,24 +2927,30 @@ func (s *ProjectService) UpdateProject(ctx context.Context, projectID string, na
 	if err := ensureProjectMutableInternal(&proj); err != nil {
 		return nil, err
 	}
-
-	// A top-level `name:` in the compose file is authoritative over the
-	// submitted project name. For name-only renames, enforce against the
-	// compose file on disk so the lock can't be bypassed via the API.
-	if composeContent != nil {
-		if yamlName := projects.ComposeContentProjectName(*composeContent); yamlName != "" {
-			name = &yamlName
-		}
-	} else if name != nil {
-		if onDiskCompose, _, readErr := projects.ReadProjectFiles(proj.Path, ""); readErr == nil {
-			if yamlName := projects.ComposeContentProjectName(onDiskCompose); yamlName != "" {
-				name = &yamlName
-			}
-		}
+	if len(fileChanges) > 0 && isGitOpsManagedProjectInternal(&proj) {
+		return nil, &common.ProjectFileForbiddenError{Err: errors.New("git-managed project files are read-only")}
 	}
+
+	backupPath := ""
+	if len(fileChanges) > 0 {
+		backupPath, err = s.backupProjectDirectoryInternal(projectsDirectory, proj.Path)
+		if err != nil {
+			return nil, err
+		}
+		defer func() {
+			if backupPath != "" {
+				_ = os.RemoveAll(backupPath)
+			}
+		}()
+	}
+
+	name = resolveAuthoritativeProjectNameInternal(&proj, name, composeContent)
 
 	if err := s.withProjectRenameRollback(ctx, &proj, func() error {
 		if err := s.applyProjectRenameIfNeeded(&proj, name, projectsDirectory); err != nil {
+			return err
+		}
+		if err := s.persistProjectFileChanges(ctx, &proj, fileTreeRevision, fileChanges); err != nil {
 			return err
 		}
 		if err := s.persistUpdatedProjectFiles(ctx, &proj, projectsDirectory, composeContent, envContent); err != nil {
@@ -2932,18 +2961,44 @@ func (s *ProjectService) UpdateProject(ctx context.Context, projectID string, na
 		}
 		return nil
 	}); err != nil {
+		if backupPath != "" {
+			if restoreErr := s.restoreProjectDirectoryBackupInternal(ctx, projectsDirectory, proj.Path, backupPath); restoreErr != nil {
+				slog.WarnContext(ctx, "failed to restore project files after update failure", "projectID", projectID, "error", restoreErr)
+			}
+		}
 		return nil, err
 	}
 
-	// When compose content changes, recalculate service counts and status so the
-	// overview doesn't show stale values (e.g. ghost services after removal).
+	s.refreshProjectAfterContentUpdateInternal(ctx, &proj, composeContent, fileChanges)
+
+	s.logProjectUpdateEventInternal(ctx, &proj, composeContent, envContent, fileChanges, user)
+
+	slog.InfoContext(ctx, "project updated", "projectID", proj.ID, "name", proj.Name)
+	return &proj, nil
+}
+
+// resolveAuthoritativeProjectNameInternal enforces that a top-level `name:` in
+// the compose file is authoritative over the submitted project name. For
+// name-only renames, it checks the compose file on disk so the lock can't be
+// bypassed via the API.
+func resolveAuthoritativeProjectNameInternal(proj *models.Project, name *string, composeContent *string) *string {
 	if composeContent != nil {
-		s.refreshProjectImageRefsInternal(ctx, &proj)
-		if err := s.updateProjectStatusandCountsInternal(ctx, proj.ID, proj.Status); err != nil {
-			slog.WarnContext(ctx, "failed to update service counts after compose edit", "projectID", proj.ID, "error", err)
+		if yamlName := projects.ComposeContentProjectName(*composeContent); yamlName != "" {
+			return &yamlName
+		}
+		return name
+	}
+	if name != nil {
+		if onDiskCompose, _, readErr := projects.ReadProjectFiles(proj.Path, ""); readErr == nil {
+			if yamlName := projects.ComposeContentProjectName(onDiskCompose); yamlName != "" {
+				return &yamlName
+			}
 		}
 	}
+	return name
+}
 
+func (s *ProjectService) logProjectUpdateEventInternal(ctx context.Context, proj *models.Project, composeContent, envContent *string, fileChanges []project.ProjectFileChange, user models.User) {
 	metadata := models.JSON{
 		"action":      "update",
 		"projectID":   proj.ID,
@@ -2955,12 +3010,24 @@ func (s *ProjectService) UpdateProject(ctx context.Context, projectID string, na
 	if envContent != nil {
 		metadata["envUpdated"] = true
 	}
+	if len(fileChanges) > 0 {
+		metadata["projectFilesUpdated"] = true
+		metadata["projectFileChangeCount"] = len(fileChanges)
+	}
 	if logErr := s.eventService.LogProjectEvent(ctx, models.EventTypeProjectUpdate, proj.ID, proj.Name, user.ID, user.Username, "0", metadata); logErr != nil {
 		slog.ErrorContext(ctx, "could not log project update action", "error", logErr)
 	}
+}
 
-	slog.InfoContext(ctx, "project updated", "projectID", proj.ID, "name", proj.Name)
-	return &proj, nil
+func (s *ProjectService) refreshProjectAfterContentUpdateInternal(ctx context.Context, proj *models.Project, composeContent *string, fileChanges []project.ProjectFileChange) {
+	if composeContent == nil && len(fileChanges) == 0 {
+		return
+	}
+
+	s.refreshProjectImageRefsInternal(ctx, proj)
+	if err := s.updateProjectStatusandCountsInternal(ctx, proj.ID, proj.Status); err != nil {
+		slog.WarnContext(ctx, "failed to update service counts after compose edit", "projectID", proj.ID, "error", err)
+	}
 }
 
 func (s *ProjectService) ApplyGitSyncProjectFiles(ctx context.Context, projectID string, composeContent string, gitEnvContent *string, user models.User) (*models.Project, error) {
@@ -3033,6 +3100,105 @@ func (s *ProjectService) getProjectForUpdate(ctx context.Context, projectID stri
 	}
 
 	return proj, projectsDirectory, nil
+}
+
+func isGitOpsManagedProjectInternal(proj *models.Project) bool {
+	return proj != nil && proj.GitOpsManagedBy != nil && strings.TrimSpace(*proj.GitOpsManagedBy) != ""
+}
+
+func (s *ProjectService) persistProjectFileChanges(ctx context.Context, proj *models.Project, fileTreeRevision *string, fileChanges []project.ProjectFileChange) error {
+	if len(fileChanges) == 0 {
+		return nil
+	}
+	if fileTreeRevision == nil || strings.TrimSpace(*fileTreeRevision) == "" {
+		return &common.ProjectFileBadRequestError{Err: errors.New("file tree revision is required")}
+	}
+
+	composeFileName := projects.DefaultComposeFileName
+	if composeFile, err := s.resolveProjectComposeFileInternal(ctx, proj); err == nil {
+		composeFileName = filepath.Base(composeFile)
+	}
+
+	if err := projects.ApplyProjectFileChanges(proj.Path, fileChanges, projects.ProjectFileApplyOptions{
+		ExpectedRevision: strings.TrimSpace(*fileTreeRevision),
+		MaxDepth:         s.config.ProjectFileTreeMaxDepth,
+		SkipDirectories:  s.config.ProjectScanSkipDirs,
+		ComposeFileName:  composeFileName,
+	}); err != nil {
+		return wrapProjectFileErrorInternal(err)
+	}
+	return nil
+}
+
+// wrapProjectFileErrorInternal maps pkg/projects sentinel errors onto the
+// common.ProjectFile* error structs the handlers translate into HTTP statuses.
+func wrapProjectFileErrorInternal(err error) error {
+	switch {
+	case errors.Is(err, projects.ErrProjectFileRevisionConflict):
+		return &common.ProjectFileConflictError{Err: err}
+	case errors.Is(err, projects.ErrProjectFileOutsideProjectDirectory),
+		errors.Is(err, projects.ErrProjectFileProtectedPath),
+		errors.Is(err, projects.ErrProjectFileSymlinkPath):
+		return &common.ProjectFileForbiddenError{Err: err}
+	default:
+		return &common.ProjectFileBadRequestError{Err: err}
+	}
+}
+
+func (s *ProjectService) backupProjectDirectoryInternal(projectsDirectory, projectPath string) (string, error) {
+	projectAbs, err := filepath.Abs(projectPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to resolve project path: %w", err)
+	}
+	projectAbs = filepath.Clean(projectAbs)
+
+	rootAbs, err := filepath.Abs(projectsDirectory)
+	if err != nil {
+		return "", fmt.Errorf("failed to resolve projects directory: %w", err)
+	}
+	rootAbs = filepath.Clean(rootAbs)
+	if !projects.IsSafeSubdirectory(rootAbs, projectAbs) || projectAbs == rootAbs {
+		return "", errors.New("project path is outside projects directory")
+	}
+
+	backupPath, err := os.MkdirTemp(projectsDirectory, ".project-update-backup-*")
+	if err != nil {
+		return "", fmt.Errorf("failed to create project backup directory: %w", err)
+	}
+	if err := projects.CopyDirectoryContents(projectAbs, backupPath); err != nil {
+		_ = os.RemoveAll(backupPath)
+		return "", fmt.Errorf("failed to backup project files: %w", err)
+	}
+	return backupPath, nil
+}
+
+func (s *ProjectService) restoreProjectDirectoryBackupInternal(ctx context.Context, projectsDirectory, projectPath, backupPath string) error {
+	projectAbs, err := filepath.Abs(projectPath)
+	if err != nil {
+		return fmt.Errorf("failed to resolve project path: %w", err)
+	}
+	projectAbs = filepath.Clean(projectAbs)
+
+	rootAbs, err := filepath.Abs(projectsDirectory)
+	if err != nil {
+		return fmt.Errorf("failed to resolve projects directory: %w", err)
+	}
+	rootAbs = filepath.Clean(rootAbs)
+	if !projects.IsSafeSubdirectory(rootAbs, projectAbs) || projectAbs == rootAbs {
+		return errors.New("project path is outside projects directory")
+	}
+
+	slog.DebugContext(ctx, "restoring project directory backup", "path", projectAbs, "backup", backupPath)
+	if err := os.RemoveAll(projectAbs); err != nil {
+		return fmt.Errorf("failed to remove failed project directory state: %w", err)
+	}
+	if err := os.MkdirAll(projectAbs, common.DirPerm); err != nil {
+		return fmt.Errorf("failed to recreate project directory: %w", err)
+	}
+	if err := projects.CopyDirectoryContents(backupPath, projectAbs); err != nil {
+		return fmt.Errorf("failed to restore project backup: %w", err)
+	}
+	return nil
 }
 
 func (s *ProjectService) withProjectRenameRollback(ctx context.Context, proj *models.Project, run func() error) error {
