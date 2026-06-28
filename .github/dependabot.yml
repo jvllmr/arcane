@@ -19,6 +19,12 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    groups:
+      tanstack-svelte:
+        applies-to: version-updates
+        patterns:
+          - "@tanstack/svelte-table"
+          - "@tanstack/svelte-query-devtools"
 
   - package-ecosystem: "gomod"
     directory: "/backend"
@@ -38,13 +44,6 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
-    ignore:
-      # docker/compose v5.1.4 imports github.com/moby/buildkit/util/tracing/env,
-      # which is absent in buildkit v0.30+.
-      - dependency-name: "github.com/moby/buildkit"
-        update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
 
   - package-ecosystem: "gomod"
     directory: "/cli"
