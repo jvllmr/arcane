@@ -49,6 +49,8 @@ builds:
       - -X github.com/getarcaneapp/arcane/backend/v2/internal/config.Version={{ .Version }}
       - -X github.com/getarcaneapp/arcane/backend/v2/internal/config.Revision={{ .ShortCommit }}
       - -X github.com/getarcaneapp/arcane/backend/v2/internal/config.BuildTime={{ .Date }}
+      - -X github.com/getarcaneapp/arcane/backend/v2/internal/config.NodeVersion={{ envOrDefault "NODE_VERSION" "unknown" }}
+      - -X github.com/getarcaneapp/arcane/backend/v2/internal/config.SvelteKitVersion={{ envOrDefault "SVELTEKIT_VERSION" "unknown" }}
     flags:
       - -trimpath
     mod_timestamp: '{{ .CommitTimestamp }}'
