@@ -53,7 +53,7 @@ require (
 	github.com/stretchr/testify v1.11.1
 	github.com/subosito/gotenv v1.6.0
 	github.com/wneessen/go-mail v0.8.1-0.20260707133953-7c4d4401589c
-	go.getarcane.app/builds v0.1.0
+	go.getarcane.app/builds v0.1.1
 	go.getarcane.app/docker/convert v0.1.0
 	go.getarcane.app/streams v0.1.0
 	go.getarcane.app/sys/atomic v0.1.0
