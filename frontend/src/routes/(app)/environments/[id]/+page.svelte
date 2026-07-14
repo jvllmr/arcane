@@ -9,7 +9,7 @@
 	import { Switch } from '$lib/components/ui/switch/index.js';
 	import { CopyButton } from '$lib/components/ui/copy-button';
 	import { cn } from '$lib/utils';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { goto, refreshAll } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
 	import { m } from '$lib/paraglide/messages';
 	import { environmentManagementService } from '$lib/services/env-mgmt-service.js';
@@ -433,7 +433,7 @@
 			isRefreshing = true;
 			statusOverride = null;
 			remoteVersion = null;
-			await invalidateAll();
+			await refreshAll();
 		} catch (err) {
 			console.error('Failed to refresh environment:', err);
 			toast.error(m.common_refresh_failed({ resource: m.resource_environment() }));
@@ -474,7 +474,7 @@
 
 			// If testing with saved URL (not custom), refresh to get backend's updated status
 			if (!customUrl) {
-				await invalidateAll();
+				await refreshAll();
 			}
 		} catch (error) {
 			statusOverride = environment.isEdge ? null : 'offline';
@@ -497,7 +497,7 @@
 			if (result.apiKey) {
 				regeneratedApiKey = result.apiKey;
 				toast.success(m.environments_regenerate_key_success());
-				await invalidateAll();
+				await refreshAll();
 			} else {
 				toast.error(m.environments_regenerate_key_failed());
 			}
