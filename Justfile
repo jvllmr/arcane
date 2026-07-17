@@ -342,6 +342,23 @@ format target="all" check="":
 _lint-frontend:
     pnpm -C frontend check
 
+# Type check Playwright tests
+[group('quality')]
+_lint-tests:
+    pnpm -C tests check
+
+# Type check email templates
+[group('quality')]
+_lint-email-templates:
+    pnpm -C email-templates check
+
+# Type check all JavaScript/TypeScript workspaces
+[group('quality')]
+_lint-js:
+    @just _lint-frontend
+    @just _lint-tests
+    @just _lint-email-templates
+
 # Lint Go backend
 [group('quality')]
 _lint-backend:
@@ -363,10 +380,10 @@ _lint-go: _lint-backend _lint-cli _lint-types
 
 [group('quality')]
 _lint-all:
-    @just _lint-frontend
+    @just _lint-js
     @just _lint-go
 
-# Lint targets. Valid: "backend", "frontend", "cli", "types" "all".
+# Lint targets. Valid: "backend", "frontend", "tests", "email-templates", "js", "cli", "types", "go", "all".
 [group('quality')]
 lint target="all":
     @just "_lint-{{ target }}"

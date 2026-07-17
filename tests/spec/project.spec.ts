@@ -132,7 +132,12 @@ async function findProjectWithDetailUpdateAction(page: Page): Promise<Project | 
 			continue;
 		}
 
-		const detail = await fetchProjectDetail(page, project.id || project.name);
+		const projectID = project.id || project.name;
+		if (!projectID) {
+			continue;
+		}
+
+		const detail = await fetchProjectDetail(page, projectID);
 		if ((detail?.updateInfo?.imageRefs?.length ?? 0) > 0) {
 			return detail;
 		}

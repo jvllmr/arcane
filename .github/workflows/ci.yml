@@ -199,8 +199,8 @@ jobs:
             > Analysis from commit ${{ github.sha }}
           edit-mode: replace
 
-  svelte-check:
-    name: Svelte Type Check
+  type-check:
+    name: Type Check
     runs-on: depot-ubuntu-latest
     steps:
       - name: Checkout code
@@ -218,8 +218,8 @@ jobs:
       - name: Setup Just
         uses: extractions/setup-just@v4
 
-      - name: Install Fontend Dependencies
-        run: just deps install frontend
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Add svelte-check problem matcher
         run: echo "::add-matcher::.github/matchers/svelte-check-matcher.json"
@@ -227,8 +227,8 @@ jobs:
       - name: Build frontend
         run: just build single frontend
 
-      - name: Run svelte-check
-        run: just lint frontend
+      - name: Run workspace type checks
+        run: just lint js
 
   e2e-tests:
     name: E2E Tests (${{ matrix.database.name }})
