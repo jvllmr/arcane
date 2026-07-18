@@ -50,7 +50,9 @@
 		MemoryStickIcon,
 		RefreshIcon,
 		TrashIcon,
-		VolumesIcon
+		UpdateIcon,
+		VolumesIcon,
+		VerifiedCheckIcon
 	} from '$lib/icons';
 	import DashboardMetricTile from './dash-metric-tile.svelte';
 	import DashboardEnvironmentUpgradeAction from './dashboard-environment-upgrade-action.svelte';
@@ -618,23 +620,31 @@
 		return buttons;
 	}
 
-	function formatEnvironmentOverviewLabel(summary: DashboardOverviewSummary): string {
-		if (summary.totalEnvironments === 0) {
-			return m.dashboard_all_no_visible_environments();
+	// Updates hero: aggregate pending image updates across every environment,
+	// mirroring the iOS Updates overview header.
+	const updatesOverview = $derived.by(() => {
+		let pending = 0;
+		let checkedEnvironments = 0;
+
+		for (const { environment } of environmentCards) {
+			if (!shouldLoadEnvironment(environment)) {
+				continue;
+			}
+			const state = dashboardStore.getEnvironmentState(environment.id);
+			if (!state?.hasLoaded) {
+				continue;
+			}
+			checkedEnvironments += 1;
+			if (debugAllGood) {
+				continue;
+			}
+			const updateItem = state.snapshot?.actionItems.items.find((item) => item.kind === 'image_updates');
+			pending += updateItem?.count ?? 0;
 		}
 
-		const parts = [m.dashboard_all_reachable_summary({ count: summary.reachableEnvironments })];
-
-		if (summary.unavailableEnvironments > 0) {
-			parts.push(m.dashboard_all_unavailable_summary({ count: summary.unavailableEnvironments }));
-		}
-
-		if (summary.disabledEnvironments > 0) {
-			parts.push(m.dashboard_all_disabled_summary({ count: summary.disabledEnvironments }));
-		}
-
-		return parts.join(' · ');
-	}
+		const checking = checkedEnvironments < loadableEnvironmentCards.length;
+		return { pending, checking };
+	});
 
 	function formatContainerOverviewLabel(summary: DashboardOverviewSummary): string {
 		if (summary.totalContainers === 0) {
@@ -751,86 +761,91 @@
 	}
 </script>
 
-<div class="flex h-full min-h-0 flex-col gap-3 overflow-hidden pt-2 md:gap-4 md:pt-3">
-	<header class="shrink-0 rounded-xl border border-border/70 bg-card/60 p-3 shadow-xs backdrop-blur-md sm:p-4">
-		<div class="relative flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-			<div class="space-y-1">
-				<p class="text-[11px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">{m.dashboard_title()}</p>
-				<h1 class="text-xl font-semibold tracking-tight sm:text-2xl">{heroGreeting}</h1>
-			</div>
-
-			<ArcaneButton
-				action="restart"
-				size="sm"
-				customLabel={m.common_refresh()}
-				icon={RefreshIcon}
-				loading={isRefreshing}
-				onclick={refreshOverview}
-			/>
+<div class="flex h-full min-h-0 flex-col gap-4 overflow-hidden pt-3 md:gap-5 md:pt-5">
+	<header class="flex shrink-0 items-start justify-between gap-4">
+		<div class="min-w-0 space-y-1">
+			<p class="text-[11px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">{m.dashboard_title()}</p>
+			<h1 class="text-xl font-semibold tracking-tight sm:text-2xl">{heroGreeting}</h1>
 		</div>
+
+		<ArcaneButton
+			action="restart"
+			size="sm"
+			customLabel={m.common_refresh()}
+			icon={RefreshIcon}
+			loading={isRefreshing}
+			onclick={refreshOverview}
+		/>
 	</header>
 
-	<section class="shrink-0 space-y-2">
-		<h2 class="text-base font-semibold tracking-tight">{m.common_overview()}</h2>
-
+	<section class="shrink-0">
 		{#if boardSummaryLoading}
-			<div class="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
-				{#each [{ icon: EnvironmentsIcon, label: m.environments_title() }, { icon: ContainersIcon, label: m.containers_title() }, { icon: ImagesIcon, label: m.images_title() }, { icon: VolumesIcon, label: m.dashboard_all_storage_title() }] as tile (tile.label)}
-					<div class="rounded-xl border border-border/50 bg-background/50 p-3">
+			<div class="grid grid-cols-2 gap-x-6 gap-y-4 lg:grid-cols-4">
+				{#each [{ icon: UpdateIcon, label: m.images_updates() }, { icon: ContainersIcon, label: m.containers_title() }, { icon: ImagesIcon, label: m.images_title() }, { icon: VolumesIcon, label: m.dashboard_all_storage_title() }] as tile (tile.label)}
+					<div class="min-w-0">
 						<div class="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 							<tile.icon class="size-3.5" />
 							<span>{tile.label}</span>
 						</div>
-						<Skeleton class="mt-2 h-7 w-12" />
+						<Skeleton class="mt-1.5 h-7 w-12" />
 						<Skeleton class="mt-1.5 h-3.5 w-28" />
 					</div>
 				{/each}
 			</div>
 		{:else}
 			{@const summary = boardState.summary}
-			<div class="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4">
-				<div class="rounded-xl border border-border/50 bg-background/50 p-3">
+			<div class="grid grid-cols-2 gap-x-6 gap-y-4 lg:grid-cols-4">
+				<div class="min-w-0">
 					<div class="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
-						<EnvironmentsIcon class="size-3.5" />
-						<span>{m.environments_title()}</span>
+						<UpdateIcon class="size-3.5" />
+						<span>{m.images_updates()}</span>
 					</div>
-					<div class="mt-2 text-2xl font-semibold tracking-tight tabular-nums">{summary.totalEnvironments}</div>
-					<div class="mt-0.5 text-xs text-muted-foreground">{formatEnvironmentOverviewLabel(summary)}</div>
+					<div class="mt-1 text-2xl font-semibold tracking-tight tabular-nums">{updatesOverview.pending}</div>
+					<div class="mt-0.5 flex h-4 items-center gap-1.5 truncate text-xs text-muted-foreground">
+						{#if updatesOverview.pending === 0 && !updatesOverview.checking}
+							<VerifiedCheckIcon class="size-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+							<span class="truncate">{m.dashboard_updates_up_to_date()}</span>
+						{:else if updatesOverview.checking}
+							<span class="truncate">{m.dashboard_updates_checking()}</span>
+						{:else}
+							<span class="truncate">{m.dashboard_updates_available_label()}</span>
+						{/if}
+					</div>
 				</div>
 
-				<div class="rounded-xl border border-border/50 bg-background/50 p-3">
+				<div class="min-w-0 border-border/60 max-lg:border-l max-lg:pl-6 lg:border-l lg:pl-6">
 					<div class="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 						<ContainersIcon class="size-3.5" />
 						<span>{m.containers_title()}</span>
 					</div>
-					<div class="mt-2 text-2xl font-semibold tracking-tight tabular-nums">{summary.totalContainers}</div>
-					<div class="mt-0.5 text-xs text-muted-foreground">{formatContainerOverviewLabel(summary)}</div>
+					<div class="mt-1 text-2xl font-semibold tracking-tight tabular-nums">{summary.totalContainers}</div>
+					<div class="mt-0.5 truncate text-xs text-muted-foreground">{formatContainerOverviewLabel(summary)}</div>
 				</div>
 
-				<div class="rounded-xl border border-border/50 bg-background/50 p-3">
+				<div class="min-w-0 border-border/60 lg:border-l lg:pl-6">
 					<div class="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 						<ImagesIcon class="size-3.5" />
 						<span>{m.images_title()}</span>
 					</div>
-					<div class="mt-2 text-2xl font-semibold tracking-tight tabular-nums">{summary.totalImages}</div>
-					<div class="mt-0.5 text-xs text-muted-foreground">{formatImageOverviewLabel(summary)}</div>
+					<div class="mt-1 text-2xl font-semibold tracking-tight tabular-nums">{summary.totalImages}</div>
+					<div class="mt-0.5 truncate text-xs text-muted-foreground">{formatImageOverviewLabel(summary)}</div>
 				</div>
 
-				<div class="rounded-xl border border-border/50 bg-background/50 p-3">
+				<div class="min-w-0 border-border/60 max-lg:border-l max-lg:pl-6 lg:border-l lg:pl-6">
 					<div class="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 						<VolumesIcon class="size-3.5" />
 						<span>{m.dashboard_all_storage_title()}</span>
 					</div>
-					<div class="mt-2 text-2xl font-semibold tracking-tight tabular-nums">{bytes.format(summary.totalImageSize)}</div>
-					<div class="mt-0.5 text-xs text-muted-foreground">{formatStorageOverviewLabel(summary)}</div>
+					<div class="mt-1 text-2xl font-semibold tracking-tight tabular-nums">{bytes.format(summary.totalImageSize)}</div>
+					<div class="mt-0.5 truncate text-xs text-muted-foreground">{formatStorageOverviewLabel(summary)}</div>
 				</div>
 			</div>
 		{/if}
 	</section>
 
-	<section class="flex min-h-0 flex-1 flex-col overflow-hidden">
+	<section class="flex min-h-0 flex-1 flex-col overflow-hidden border-t border-border/60 pt-3">
 		<div class="mb-2 flex shrink-0 items-center justify-between gap-3">
-			<h2 class="text-base font-semibold tracking-tight">{m.dashboard_all_environment_board_title()}</h2>
+			<h2 class="text-sm font-semibold tracking-tight text-muted-foreground">{m.dashboard_all_environment_board_title()}</h2>
 		</div>
 
 		{#if environmentCards.length === 0}
@@ -858,7 +873,7 @@
 							variant="outlined"
 							class={`dashboard-environment-card [container-type:inline-size] overflow-hidden border transition-colors ${isCurrent ? 'border-primary/40 bg-primary/5' : 'border-border/60'}`}
 						>
-							<Card.Content class="space-y-5 p-5">
+							<Card.Content class="space-y-4 p-4 sm:p-5">
 								<div class="flex flex-col gap-3 border-b border-border/60 pb-4 sm:flex-row sm:items-start sm:justify-between">
 									<div class="min-w-0 space-y-2">
 										<div class="flex min-w-0 flex-wrap items-center gap-2">
@@ -963,8 +978,8 @@
 								</div>
 
 								{#if shouldLoadEnvironment(environment) || isEnvironmentOnline(environment)}
-									<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-										<div class="rounded-lg border border-border/50 bg-background/50 p-3">
+									<div class="grid grid-cols-1 max-sm:gap-4 sm:grid-cols-3 sm:divide-x sm:divide-border/60">
+										<div class="min-w-0 not-first:sm:pl-4 first:sm:pr-4">
 											<div class="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 												{m.containers_title()}
 											</div>
@@ -975,7 +990,7 @@
 												</div>
 											{:else}
 												{@const loadedItem = boardState.overviewById.get(environment.id) ?? baseItem}
-												<div class="mt-1 text-lg font-semibold">
+												<div class="mt-1 text-lg font-semibold tabular-nums">
 													{loadedItem.containers.runningContainers}/{loadedItem.containers.totalContainers}
 												</div>
 												<div class="text-xs text-muted-foreground">
@@ -985,7 +1000,7 @@
 											{/if}
 										</div>
 
-										<div class="rounded-lg border border-border/50 bg-background/50 p-3">
+										<div class="min-w-0 not-first:sm:pl-4 first:sm:pr-4">
 											<div class="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 												{m.images_title()}
 											</div>
@@ -996,7 +1011,7 @@
 												</div>
 											{:else}
 												{@const loadedItem = boardState.overviewById.get(environment.id) ?? baseItem}
-												<div class="mt-1 text-lg font-semibold">{loadedItem.imageUsageCounts.totalImages}</div>
+												<div class="mt-1 text-lg font-semibold tabular-nums">{loadedItem.imageUsageCounts.totalImages}</div>
 												<div class="text-xs text-muted-foreground">
 													{loadedItem.imageUsageCounts.imagesInuse}
 													{m.common_in_use()} · {loadedItem.imageUsageCounts.imagesUnused}
@@ -1005,7 +1020,7 @@
 											{/if}
 										</div>
 
-										<div class="rounded-lg border border-border/50 bg-background/50 p-3">
+										<div class="min-w-0 not-first:sm:pl-4 first:sm:pr-4">
 											<div class="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 												{m.dashboard_action_items_title()}
 											</div>
@@ -1016,20 +1031,20 @@
 												</div>
 											{:else}
 												{@const loadedItem = boardState.overviewById.get(environment.id) ?? baseItem}
-												<div class="mt-1 text-lg font-semibold">{loadedItem.actionItems.items.length}</div>
+												<div class="mt-1 text-lg font-semibold tabular-nums">{loadedItem.actionItems.items.length}</div>
 												<div class="text-xs text-muted-foreground">{getActionSummary(loadedItem)}</div>
 											{/if}
 										</div>
 									</div>
 								{:else}
-									<div class="rounded-lg border border-border/50 bg-background/50 px-4 py-3 text-sm">
+									<div class="border-t border-border/60 pt-3 text-sm">
 										<p class="font-medium">{m.dashboard_all_environment_unavailable_title()}</p>
 										<p class="mt-1 text-muted-foreground">{m.dashboard_all_environment_unavailable_description()}</p>
 									</div>
 								{/if}
 
 								{#if shouldLoadEnvironment(environment)}
-									<div class="pt-1">
+									<div class="border-t border-border/60 pt-3">
 										<div class="grid grid-cols-1 gap-1 {gpuMetric !== null ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3'}">
 											{#if liveStatsLoading}
 												{#each [1, 2, 3] as tile (tile)}

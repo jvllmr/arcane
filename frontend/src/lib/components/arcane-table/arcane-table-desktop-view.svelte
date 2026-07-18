@@ -152,8 +152,8 @@
 			'sticky right-0 z-[var(--arcane-z-sticky)] p-0 whitespace-nowrap',
 			shouldVirtualize ? 'w-24' : 'w-0',
 			'bg-background',
-			'group-hover/row:bg-[color-mix(in_oklab,var(--color-primary)_10%,var(--color-background))]',
-			'group-data-[state=selected]/row:bg-[color-mix(in_oklab,var(--color-primary)_20%,var(--color-background))]',
+			'group-hover/row:bg-[color-mix(in_oklab,var(--color-primary)_6%,var(--color-background))]',
+			'group-data-[state=selected]/row:bg-[color-mix(in_oklab,var(--color-primary)_12%,var(--color-background))]',
 			'group-data-[expanded]/row:bg-[color-mix(in_oklab,var(--color-primary)_15%,var(--color-background))]'
 		)
 	);
@@ -177,7 +177,9 @@
 	{#if cell.column.id === 'actions'}
 		<!-- Pinned row actions: a floating chip at the row's end, always present in its own gutter. -->
 		<div class="flex items-center justify-end py-1 pr-3 pl-2" data-row-select-ignore>
-			<div class="flex items-center gap-0.5 rounded-full border border-border/50 bg-card/90 p-0.5 shadow-sm backdrop-blur-sm">
+			<div
+				class="flex items-center gap-0.5 rounded-full border border-border/50 bg-card/90 p-0.5 shadow-sm backdrop-blur-sm transition-all duration-150 group-hover/row:border-border group-hover/row:shadow-md"
+			>
 				<FlexRender {cell} />
 			</div>
 		</div>
