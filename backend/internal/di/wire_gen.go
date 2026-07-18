@@ -127,7 +127,7 @@ func InitializeJobs(ctx context.Context, cfg *config.Config, svcs *Services) *Jo
 	environmentService := svcs.Environment
 	dockerClientService := svcs.Docker
 	projectService := svcs.Project
-	imageUpdateWatcher := scheduler.NewImageUpdateWatcher(imageUpdateService, settingsService, environmentService, dockerClientService, projectService)
+	imageUpdateWatcher := scheduler.NewImageUpdateWatcher(cfg, imageUpdateService, settingsService, environmentService, dockerClientService, projectService)
 	dockerClientRefreshJob := scheduler.NewDockerClientRefreshJob(dockerClientService, settingsService)
 	kvService := svcs.KV
 	analyticsJob := provideAnalyticsJobInternal(settingsService, kvService, cfg)
