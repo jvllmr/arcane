@@ -71,7 +71,7 @@
 					}`}
 					onclick={() => onModeChange?.('workspace')}
 				>
-					{m.build_context_mode_workspace()}
+					{m.workspace()}
 				</button>
 				<button
 					type="button"
@@ -119,7 +119,7 @@
 
 					<div class="mt-5 grid gap-3 text-xs text-muted-foreground sm:grid-cols-2">
 						<div class="rounded-xl border border-border/70 bg-muted/50 p-3">
-							<div class="font-medium text-foreground">{m.build_remote_git_examples()}</div>
+							<div class="font-medium text-foreground">{m.examples()}</div>
 							<div class="mt-2 font-mono leading-5 break-all">
 								https://github.com/owner/repo.git
 								<br />

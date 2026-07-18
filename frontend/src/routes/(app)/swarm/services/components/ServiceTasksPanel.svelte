@@ -47,7 +47,7 @@
 		<div class="flex flex-1 items-center justify-between">
 			<div class="flex flex-col gap-1.5">
 				<Card.Title>
-					<h2>{m.swarm_tasks_title()}</h2>
+					<h2>{m.tasks()}</h2>
 				</Card.Title>
 				<Card.Description>
 					{m.swarm_service_tasks_count({ count: tasks.length })}

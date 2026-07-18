@@ -430,8 +430,8 @@
 
 	function getRoleBadge(environment: Environment): { text: string; variant: 'primary' | 'gray' } {
 		return environment.id === LOCAL_DOCKER_ENVIRONMENT_ID
-			? { text: m.dashboard_all_role_manager(), variant: 'primary' }
-			: { text: m.dashboard_all_role_agent(), variant: 'gray' };
+			? { text: m.manager(), variant: 'primary' }
+			: { text: m.agent(), variant: 'gray' };
 	}
 
 	function getResolvedStatusLabel(environment: Environment): string {
@@ -452,11 +452,11 @@
 	function getActionItemLabel(item: DashboardActionItem): string {
 		switch (item.kind) {
 			case 'stopped_containers':
-				return m.containers_title();
+				return m.containers();
 			case 'image_updates':
-				return m.images_updates();
+				return m.updates();
 			case 'actionable_vulnerabilities':
-				return m.security_title();
+				return m.security();
 			case 'expiring_keys':
 				return m.api_key_page_title();
 			default:
@@ -479,7 +479,7 @@
 		if (!isEnvironmentOnline(environment)) {
 			const statusLabel = getResolvedStatusLabel(environment);
 			return {
-				label: m.dashboard_all_activity(),
+				label: m.activity(),
 				value: statusLabel,
 				title: statusLabel
 			};
@@ -496,7 +496,7 @@
 						: null;
 
 		if (!labelAndValue?.raw) {
-			return { label: m.dashboard_all_activity(), value: m.common_never(), title: m.common_never() };
+			return { label: m.activity(), value: m.common_never(), title: m.common_never() };
 		}
 
 		const parsed = new Date(labelAndValue.raw);
@@ -720,8 +720,8 @@
 		const typeLabels: Record<PruneType, string> = {
 			containers: m.prune_stopped_containers(),
 			images: m.prune_unused_images(),
-			networks: m.prune_unused_networks(),
-			volumes: m.prune_unused_volumes(),
+			networks: m.unused_networks(),
+			volumes: m.unused_volumes(),
 			buildCache: m.build_cache()
 		};
 		const typesString = selectedTypes.map((type) => typeLabels[type]).join(', ');
@@ -781,7 +781,7 @@
 	<section class="shrink-0">
 		{#if boardSummaryLoading}
 			<div class="grid grid-cols-2 gap-x-6 gap-y-4 lg:grid-cols-4">
-				{#each [{ icon: UpdateIcon, label: m.images_updates() }, { icon: ContainersIcon, label: m.containers_title() }, { icon: ImagesIcon, label: m.images_title() }, { icon: VolumesIcon, label: m.dashboard_all_storage_title() }] as tile (tile.label)}
+				{#each [{ icon: UpdateIcon, label: m.updates() }, { icon: ContainersIcon, label: m.containers() }, { icon: ImagesIcon, label: m.images() }, { icon: VolumesIcon, label: m.storage() }] as tile (tile.label)}
 					<div class="min-w-0">
 						<div class="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 							<tile.icon class="size-3.5" />
@@ -798,7 +798,7 @@
 				<div class="min-w-0">
 					<div class="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 						<UpdateIcon class="size-3.5" />
-						<span>{m.images_updates()}</span>
+						<span>{m.updates()}</span>
 					</div>
 					<div class="mt-1 text-2xl font-semibold tracking-tight tabular-nums">{updatesOverview.pending}</div>
 					<div class="mt-0.5 flex h-4 items-center gap-1.5 truncate text-xs text-muted-foreground">
@@ -816,7 +816,7 @@
 				<div class="min-w-0 border-border/60 max-lg:border-l max-lg:pl-6 lg:border-l lg:pl-6">
 					<div class="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 						<ContainersIcon class="size-3.5" />
-						<span>{m.containers_title()}</span>
+						<span>{m.containers()}</span>
 					</div>
 					<div class="mt-1 text-2xl font-semibold tracking-tight tabular-nums">{summary.totalContainers}</div>
 					<div class="mt-0.5 truncate text-xs text-muted-foreground">{formatContainerOverviewLabel(summary)}</div>
@@ -825,7 +825,7 @@
 				<div class="min-w-0 border-border/60 lg:border-l lg:pl-6">
 					<div class="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 						<ImagesIcon class="size-3.5" />
-						<span>{m.images_title()}</span>
+						<span>{m.images()}</span>
 					</div>
 					<div class="mt-1 text-2xl font-semibold tracking-tight tabular-nums">{summary.totalImages}</div>
 					<div class="mt-0.5 truncate text-xs text-muted-foreground">{formatImageOverviewLabel(summary)}</div>
@@ -834,7 +834,7 @@
 				<div class="min-w-0 border-border/60 max-lg:border-l max-lg:pl-6 lg:border-l lg:pl-6">
 					<div class="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
 						<VolumesIcon class="size-3.5" />
-						<span>{m.dashboard_all_storage_title()}</span>
+						<span>{m.storage()}</span>
 					</div>
 					<div class="mt-1 text-2xl font-semibold tracking-tight tabular-nums">{bytes.format(summary.totalImageSize)}</div>
 					<div class="mt-0.5 truncate text-xs text-muted-foreground">{formatStorageOverviewLabel(summary)}</div>
@@ -981,7 +981,7 @@
 									<div class="grid grid-cols-1 max-sm:gap-4 sm:grid-cols-3 sm:divide-x sm:divide-border/60">
 										<div class="min-w-0 not-first:sm:pl-4 first:sm:pr-4">
 											<div class="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
-												{m.containers_title()}
+												{m.containers()}
 											</div>
 											{#if isEnvironmentSnapshotLoading(environment.id)}
 												<div class="mt-2 space-y-2">
@@ -1002,7 +1002,7 @@
 
 										<div class="min-w-0 not-first:sm:pl-4 first:sm:pr-4">
 											<div class="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
-												{m.images_title()}
+												{m.images()}
 											</div>
 											{#if isEnvironmentSnapshotLoading(environment.id)}
 												<div class="mt-2 space-y-2">
@@ -1059,7 +1059,7 @@
 												{/each}
 											{:else}
 												<DashboardMetricTile
-													title={m.dashboard_meter_cpu()}
+													title={m.cpu_usage()}
 													icon={CpuIcon}
 													value={formatPercent(cpuMetric)}
 													label={getCpuMetricLabel(systemStats)}
@@ -1067,7 +1067,7 @@
 												/>
 
 												<DashboardMetricTile
-													title={m.dashboard_meter_memory()}
+													title={m.memory_usage()}
 													icon={MemoryStickIcon}
 													value={formatPercent(memoryMetric)}
 													label={getCapacityLabel(systemStats?.memoryUsage, systemStats?.memoryTotal)}

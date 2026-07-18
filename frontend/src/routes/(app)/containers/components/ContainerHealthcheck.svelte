@@ -301,7 +301,7 @@
 											{probe.start ? formatDistanceToNow(probe.start, { addSuffix: true }) : '—'}
 										</span>
 										<span class="text-xs text-muted-foreground">
-											{m.health_probe_duration()}: {probeDuration(probe.start, probe.end)}
+											{m.duration()}: {probeDuration(probe.start, probe.end)}
 										</span>
 									</div>
 									{#if probe.output}

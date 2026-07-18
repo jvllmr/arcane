@@ -186,7 +186,7 @@
 					size="sm"
 					onclick={() => (showCreateFolder = true)}
 					icon={MoveToFolderIcon}
-					customLabel={m.volumes_browser_new_folder()}
+					customLabel={m.new_folder()}
 				/>
 				<ArcaneButton
 					action="base"

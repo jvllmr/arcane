@@ -67,7 +67,7 @@
 			</div>
 
 			<Dialog.Footer class="mt-6">
-				<ArcaneButton action="cancel" tone="ghost" onclick={() => onOpenChange(false)} customLabel={m.cancel()} />
+				<ArcaneButton action="cancel" tone="ghost" onclick={() => onOpenChange(false)} customLabel={m.common_cancel()} />
 				<ArcaneButton
 					action="confirm"
 					type="submit"

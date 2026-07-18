@@ -28,7 +28,7 @@
 		{ value: 'overlay', label: m.networks_overlay() },
 		{ value: 'macvlan', label: m.networks_macvlan() },
 		{ value: 'ipvlan', label: m.networks_ipvlan() },
-		{ value: 'none', label: m.networks_none() }
+		{ value: 'none', label: m.none() }
 	];
 
 	const formSchema = z.object({
@@ -167,7 +167,7 @@
 				label={m.network_driver_label()}
 				description={m.network_driver_description()}
 				options={drivers}
-				placeholder={m.network_driver_placeholder()}
+				placeholder={m.select_a_driver_placeholder()}
 			/>
 
 			<div class="space-y-4">
@@ -212,7 +212,7 @@
 									size="sm"
 									onclick={addLabel}
 									disabled={isLoading}
-									customLabel={m.add_label_button()}
+									customLabel={m.add_label()}
 								/>
 							</div>
 
@@ -284,7 +284,7 @@
 									</div>
 
 									<div class="space-y-2">
-										<Label for="gateway" class="text-sm font-medium">{m.networks_ipam_gateway_label()}</Label>
+										<Label for="gateway" class="text-sm font-medium">{m.common_gateway()}</Label>
 										<Input
 											id="gateway"
 											type="text"

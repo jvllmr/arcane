@@ -77,7 +77,7 @@
 	}
 
 	function getEnvName(environmentId: string | undefined): string {
-		if (!environmentId) return m.users_role_assignments_scope_global();
+		if (!environmentId) return m.global_org_wide();
 		return envsById[environmentId]?.name ?? environmentId;
 	}
 
@@ -124,26 +124,26 @@
 	}
 
 	const columns = [
-		{ id: 'claimValue', accessorKey: 'claimValue', title: m.oidc_mappings_col_claim(), sortable: true, cell: ClaimCell },
+		{ id: 'claimValue', accessorKey: 'claimValue', title: m.claim_value(), sortable: true, cell: ClaimCell },
 		{
 			id: 'roleId',
 			accessorKey: 'roleId',
-			title: m.oidc_mappings_col_role(),
+			title: m.common_role(),
 			sortable: true,
 			cell: RoleCell
 		},
 		{
 			id: 'environmentId',
 			accessorKey: 'environmentId',
-			title: m.oidc_mappings_col_scope(),
+			title: m.resource_environment_cap(),
 			sortable: true,
 			cell: ScopeCell
 		}
 	] satisfies ColumnSpec<OidcRoleMapping>[];
 
 	const mobileFields = [
-		{ id: 'roleId', label: m.oidc_mappings_col_role(), defaultVisible: true },
-		{ id: 'environmentId', label: m.oidc_mappings_col_scope(), defaultVisible: true }
+		{ id: 'roleId', label: m.common_role(), defaultVisible: true },
+		{ id: 'environmentId', label: m.resource_environment_cap(), defaultVisible: true }
 	];
 
 	let mobileFieldVisibility = $state<Record<string, boolean>>({});
@@ -188,7 +188,7 @@
 		]}
 		fields={[
 			{
-				label: m.oidc_mappings_col_scope(),
+				label: m.resource_environment_cap(),
 				getValue: (item: OidcRoleMapping) => getEnvName(item.environmentId),
 				icon: ShieldAlertIcon,
 				iconVariant: 'gray' as const,

@@ -58,7 +58,7 @@
 
 		const groups = new Map<string, Template[]>();
 		for (const template of sortedTemplates) {
-			const key = template.registry?.name ?? (template.isRemote ? m.templates_remote() : m.templates_local());
+			const key = template.registry?.name ?? (template.isRemote ? m.templates_remote() : m.local());
 			const items = groups.get(key) ?? [];
 			items.push(template);
 			groups.set(key, items);
@@ -189,7 +189,7 @@
 						{:else}
 							<ProjectsIcon class="size-3" />
 						{/if}
-						{template.registry?.name ?? (template.isRemote ? m.templates_remote() : m.templates_local())}
+						{template.registry?.name ?? (template.isRemote ? m.templates_remote() : m.local())}
 					</Badge>
 				</div>
 			{/if}

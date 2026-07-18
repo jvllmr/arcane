@@ -120,7 +120,7 @@
 					{
 						id: 'remove-selected',
 						action: 'remove' as const,
-						label: m.events_remove_selected(),
+						label: m.common_remove_selected(),
 						onclick: handleDeleteSelected,
 						loading: deleteSelectedMutation.isPending,
 						disabled: deleteSelectedMutation.isPending
@@ -144,7 +144,7 @@
 			icon: EventsIcon
 		},
 		{
-			title: m.events_info(),
+			title: m.info(),
 			value: counts?.info ?? 0,
 			icon: InfoIcon,
 			iconColor: 'text-blue-500',
@@ -152,7 +152,7 @@
 			active: activeSeverities.includes('info')
 		},
 		{
-			title: m.events_success(),
+			title: m.common_success(),
 			value: counts?.success ?? 0,
 			icon: CheckIcon,
 			iconColor: 'text-green-500',
@@ -160,7 +160,7 @@
 			active: activeSeverities.includes('success')
 		},
 		{
-			title: m.events_warning(),
+			title: m.warning(),
 			value: counts?.warning ?? 0,
 			icon: AlertIcon,
 			iconColor: 'text-yellow-500',
@@ -168,7 +168,7 @@
 			active: activeSeverities.includes('warning')
 		},
 		{
-			title: m.events_error(),
+			title: m.common_error(),
 			value: counts?.error ?? 0,
 			icon: CloseIcon,
 			iconColor: 'text-red-500',

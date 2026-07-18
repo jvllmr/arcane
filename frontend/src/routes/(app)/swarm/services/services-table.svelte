@@ -99,13 +99,13 @@
 		{
 			id: 'nodes',
 			accessorFn: (item: SwarmServiceSummary) => item.nodes,
-			title: m.swarm_nodes_column(),
+			title: m.nodes(),
 			cell: NodesCell
 		},
 		{
 			id: 'networks',
 			accessorFn: (item: SwarmServiceSummary) => item.networks,
-			title: m.swarm_networks(),
+			title: m.resource_networks_cap(),
 			cell: NetworksCell
 		},
 		{ accessorKey: 'ports', title: m.common_ports(), cell: PortsCell }
@@ -115,8 +115,8 @@
 		{ id: 'stackName', label: m.swarm_stack(), defaultVisible: true },
 		{ id: 'mode', label: m.swarm_mode(), defaultVisible: true },
 		{ id: 'replicas', label: m.swarm_replicas(), defaultVisible: true },
-		{ id: 'nodes', label: m.swarm_nodes_column(), defaultVisible: true },
-		{ id: 'networks', label: m.swarm_networks(), defaultVisible: false },
+		{ id: 'nodes', label: m.nodes(), defaultVisible: true },
+		{ id: 'networks', label: m.resource_networks_cap(), defaultVisible: false },
 		{ id: 'ports', label: m.common_ports(), defaultVisible: false }
 	];
 
@@ -157,7 +157,7 @@
 			{/each}
 			{#if items.length > MAX_OVERFLOW_ITEMS}
 				<span class="text-xs font-medium text-muted-foreground">
-					{m.swarm_n_more({ count: items.length - MAX_OVERFLOW_ITEMS })}
+					{m.count_more({ count: items.length - MAX_OVERFLOW_ITEMS })}
 				</span>
 			{/if}
 		</div>
@@ -206,7 +206,7 @@
 				show: mobileFieldVisibility['replicas'] ?? true
 			},
 			{
-				label: m.swarm_nodes_column(),
+				label: m.nodes(),
 				getValue: (item: SwarmServiceSummary) =>
 					item.nodes?.length
 						? item.nodes.slice(0, 3).join(', ') + (item.nodes.length > 3 ? ` +${item.nodes.length - 3}` : '')
@@ -216,7 +216,7 @@
 				show: mobileFieldVisibility['nodes'] ?? true
 			},
 			{
-				label: m.swarm_networks(),
+				label: m.resource_networks_cap(),
 				getValue: (item: SwarmServiceSummary) => (item.networks?.length ? item.networks.join(', ') : m.common_na()),
 				icon: NetworksIcon,
 				iconVariant: 'gray' as const,

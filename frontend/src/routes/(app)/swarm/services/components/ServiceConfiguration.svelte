@@ -111,7 +111,7 @@
 						<Card.Root variant="subtle">
 							<Card.Content class="flex flex-col gap-2 p-4">
 								<div class="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-									{m.resource_user_cap()}
+									{m.common_user()}
 								</div>
 								<div class="cursor-pointer font-mono text-sm font-medium text-foreground select-all">
 									{user}
@@ -123,7 +123,7 @@
 					{#if hostname}
 						<Card.Root variant="subtle">
 							<Card.Content class="flex flex-col gap-2 p-4">
-								<div class="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{m.swarm_hostname()}</div>
+								<div class="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{m.hostname()}</div>
 								<div class="cursor-pointer font-mono text-sm font-medium text-foreground select-all">
 									{hostname}
 								</div>

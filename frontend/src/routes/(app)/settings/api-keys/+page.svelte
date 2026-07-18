@@ -98,7 +98,7 @@
 		{
 			id: 'create',
 			action: 'create',
-			label: m.api_key_create_button(),
+			label: m.create_api_key(),
 			onclick: openCreateDialog,
 			loading: isLoading.creating,
 			disabled: isLoading.creating

@@ -49,7 +49,7 @@
 			[
 				{
 					value: 'settings',
-					label: m.authentication_title()
+					label: m.authentication()
 				},
 				{
 					value: 'federated',
@@ -333,7 +333,7 @@
 {/snippet}
 
 <SettingsPageLayout
-	title={m.authentication_title()}
+	title={m.authentication()}
 	description={m.authentication_description()}
 	icon={LockIcon}
 	pageType={activeTab === 'settings' ? 'form' : 'management'}
@@ -346,7 +346,7 @@
 			<Tabs.Content value="settings" class="mt-6">
 				<fieldset disabled={isReadOnly} class="relative space-y-8">
 					<div class="space-y-4">
-						<h3 class="text-base font-semibold">{m.security_authentication_heading()}</h3>
+						<h3 class="text-base font-semibold">{m.authentication()}</h3>
 
 						{#if isAutoLoginEnabled}
 							<Alert.Root variant="default" class="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950">

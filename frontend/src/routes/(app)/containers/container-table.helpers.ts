@@ -72,15 +72,15 @@ export function groupContainerByProject(container: ContainerSummaryDto): string 
 export function getContainerStatusLabel(state: string): string {
 	switch (state) {
 		case 'created':
-			return m.containers_status_created();
+			return m.common_created();
 		case 'restarting':
 			return m.containers_status_restarting();
 		case 'running':
-			return m.containers_status_running();
+			return m.common_running();
 		case 'removing':
 			return m.containers_status_removing();
 		case 'paused':
-			return m.containers_status_paused();
+			return m.paused();
 		case 'exited':
 			return m.containers_status_exited();
 		case 'dead':

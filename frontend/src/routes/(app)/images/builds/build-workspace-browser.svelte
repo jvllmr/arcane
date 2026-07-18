@@ -220,7 +220,7 @@
 						<DropdownMenu.Separator />
 						<DropdownMenu.Item onclick={() => (showCreateFolder = true)}>
 							<MoveToFolderIcon class="size-4" />
-							{m.volumes_browser_new_folder()}
+							{m.new_folder()}
 						</DropdownMenu.Item>
 						<DropdownMenu.Item onclick={() => (showUpload = true)}>
 							<UploadIcon class="size-4" />

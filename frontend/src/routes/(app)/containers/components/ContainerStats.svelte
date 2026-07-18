@@ -202,7 +202,7 @@
 				<div class="lg:col-span-2">
 					<div class="space-y-3">
 						<div class="flex min-h-[44px] items-start justify-between">
-							<span class="text-base font-semibold text-foreground">{m.dashboard_meter_cpu()}</span>
+							<span class="text-base font-semibold text-foreground">{m.cpu_usage()}</span>
 							<div class="text-right">
 								<div class="text-sm font-semibold text-muted-foreground">
 									{cpuUsagePercent.toFixed(2)}%
@@ -225,7 +225,7 @@
 									<span>{m.containers_stats_online_cpus()}: {stats.cpu_stats.online_cpus}</span>
 								{/if}
 								<span>
-									{m.containers_stats_system_cpu()}: {((stats.cpu_stats.system_cpu_usage || 0) / 1e9).toFixed(2)}s
+									{m.system()}: {((stats.cpu_stats.system_cpu_usage || 0) / 1e9).toFixed(2)}s
 								</span>
 							</div>
 						{/if}
@@ -236,7 +236,7 @@
 				<div class="lg:col-span-2">
 					<div class="space-y-3">
 						<div class="flex min-h-[44px] items-start justify-between">
-							<span class="text-base font-semibold text-foreground">{m.dashboard_meter_memory()}</span>
+							<span class="text-base font-semibold text-foreground">{m.memory_usage()}</span>
 							<div class="text-right">
 								<div class="text-sm font-semibold text-muted-foreground">
 									{memoryUsagePercent.toFixed(1)}%
@@ -261,11 +261,11 @@
 								<div>{bytes.format(memoryCacheBytes)}</div>
 							</div>
 							<div>
-								<div class="font-medium">{m.containers_stats_active()}</div>
+								<div class="font-medium">{m.common_active()}</div>
 								<div>{bytes.format(memoryActiveBytes)}</div>
 							</div>
 							<div>
-								<div class="font-medium">{m.containers_stats_inactive()}</div>
+								<div class="font-medium">{m.inactive()}</div>
 								<div>{bytes.format(memoryInactiveBytes)}</div>
 							</div>
 						</div>

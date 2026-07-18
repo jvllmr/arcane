@@ -194,7 +194,7 @@
 	{:else if authType === 'ssh'}
 		<Badge variant="purple" minWidth="20">{m.git_repository_auth_ssh()}</Badge>
 	{:else}
-		<Badge variant="gray" minWidth="20">{m.git_repository_auth_none()}</Badge>
+		<Badge variant="gray" minWidth="20">{m.none()}</Badge>
 	{/if}
 {/snippet}
 
@@ -237,7 +237,7 @@
 		<IfPermitted perm="git-repositories:test">
 			<DropdownMenu.Item onclick={() => handleTest(item.id, item.name)} disabled={isLoading.testing}>
 				<TestTubeIcon class="size-4" />
-				{m.git_repository_test_connection()}
+				{m.test_connection()}
 			</DropdownMenu.Item>
 		</IfPermitted>
 

@@ -157,7 +157,7 @@
 				</div>
 				<span class="text-border">•</span>
 				<div class="flex items-center gap-1.5">
-					<span>{m.activity_duration()}</span>
+					<span>{m.duration()}</span>
 					<span class="font-medium text-foreground tabular-nums">{formatDurationInternal(liveActivity)}</span>
 				</div>
 				{#if sourceEnvironmentName}

@@ -106,7 +106,7 @@
 		</div>
 
 		<div class="space-y-2">
-			<Label>{m.jobs_cron_examples()}</Label>
+			<Label>{m.examples()}</Label>
 			<div class="grid grid-cols-2 gap-3 pt-2">
 				{#each cronExamples as example (example.value)}
 					<Button

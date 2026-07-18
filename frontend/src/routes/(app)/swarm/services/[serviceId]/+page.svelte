@@ -176,10 +176,10 @@
 	const tabItems = $derived<TabItem[]>([
 		{ value: 'overview', label: m.common_overview(), icon: DockIcon },
 		...(canViewServiceLogs ? [{ value: 'logs', label: m.common_logs(), icon: FileTextIcon }] : []),
-		{ value: 'tasks', label: m.swarm_tasks_title(), icon: JobsIcon },
+		{ value: 'tasks', label: m.tasks(), icon: JobsIcon },
 		...(showConfiguration ? [{ value: 'config', label: m.common_configuration(), icon: SettingsIcon }] : []),
-		...(showNetworkTab ? [{ value: 'network', label: m.containers_nav_networks(), icon: NetworksIcon }] : []),
-		...(hasMounts ? [{ value: 'storage', label: m.containers_nav_storage(), icon: VolumesIcon }] : [])
+		...(showNetworkTab ? [{ value: 'network', label: m.resource_networks_cap(), icon: NetworksIcon }] : []),
+		...(hasMounts ? [{ value: 'storage', label: m.storage(), icon: VolumesIcon }] : [])
 	]);
 
 	const urlTab = useUrlTab({
@@ -402,7 +402,7 @@
 {:else}
 	<ResourceNotFound
 		resource={m.swarm_service()}
-		resourceListTitle={m.swarm_services_title()}
+		resourceListTitle={m.services()}
 		backHref="/swarm/services"
 		onRetry={refreshData}
 	/>

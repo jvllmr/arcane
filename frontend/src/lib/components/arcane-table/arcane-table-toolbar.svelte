@@ -95,7 +95,7 @@
 		<DataTableFacetedFilter column={usageColumn} title={m.common_usage()} options={usageFilters} />
 	{/if}
 	{#if updatesColumn}
-		<DataTableFacetedFilter column={updatesColumn} title={m.images_updates()} options={imageUpdateFilters} />
+		<DataTableFacetedFilter column={updatesColumn} title={m.updates()} options={imageUpdateFilters} />
 	{/if}
 	{#if vulnSeverityColumn}
 		<DataTableFacetedFilter column={vulnSeverityColumn} title={m.events_col_severity()} options={vulnerabilitySeverityFilters} />

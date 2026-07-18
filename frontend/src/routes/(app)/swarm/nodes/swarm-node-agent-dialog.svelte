@@ -148,7 +148,7 @@
 						<ArcaneButton
 							action="base"
 							tone="outline"
-							customLabel={m.containers_title()}
+							customLabel={m.containers()}
 							onclick={() => navigateToResource('/containers', ['containers:list', 'containers:read'])}
 						/>
 					{/if}
@@ -156,7 +156,7 @@
 						<ArcaneButton
 							action="base"
 							tone="outline"
-							customLabel={m.images_title()}
+							customLabel={m.images()}
 							onclick={() => navigateToResource('/images', ['images:list', 'images:read'])}
 						/>
 					{/if}
@@ -164,7 +164,7 @@
 						<ArcaneButton
 							action="base"
 							tone="outline"
-							customLabel={m.volumes_title()}
+							customLabel={m.resource_volumes_cap()}
 							onclick={() => navigateToResource('/volumes', ['volumes:list', 'volumes:read'])}
 						/>
 					{/if}
@@ -172,7 +172,7 @@
 						<ArcaneButton
 							action="base"
 							tone="outline"
-							customLabel={m.networks_title()}
+							customLabel={m.resource_networks_cap()}
 							onclick={() => navigateToResource('/networks', ['networks:list', 'networks:read'])}
 						/>
 					{/if}
@@ -195,9 +195,9 @@
 		{:else if isReady && deployment}
 			<div class="space-y-4">
 				<AgentCommandBlock
-					dockerRunLabel={m.environments_docker_run_command()}
+					dockerRunLabel={m.docker_run_command()}
 					dockerRun={deployment.dockerRun}
-					dockerComposeLabel={m.environments_docker_compose()}
+					dockerComposeLabel={m.common_docker_compose()}
 					dockerCompose={deployment.dockerCompose}
 					preClass="pr-12"
 				/>

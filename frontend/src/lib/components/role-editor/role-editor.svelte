@@ -25,9 +25,9 @@
 	const totalPermissions = $derived(manifest.resources.reduce((sum, r) => sum + r.actions.length, 0));
 
 	const formSchema = z.object({
-		name: z.string().min(1, m.roles_name_required()),
+		name: z.string().min(1, m.common_name_required()),
 		description: z.string().optional().default(''),
-		permissions: z.array(z.string()).min(1, m.roles_permissions_required())
+		permissions: z.array(z.string()).min(1, m.pick_at_least_one_permission())
 	});
 
 	const formData = $derived({
@@ -62,11 +62,11 @@
 			</Card.Header>
 			<Card.Content class="space-y-4 p-6 pt-2">
 				<div class="flex items-center gap-2">
-					<Badge variant={isBuiltIn ? 'blue' : 'green'} size="sm">{isBuiltIn ? m.roles_built_in() : m.roles_custom()}</Badge>
+					<Badge variant={isBuiltIn ? 'blue' : 'green'} size="sm">{isBuiltIn ? m.roles_built_in() : m.custom()}</Badge>
 				</div>
 
 				<FormInput
-					label={m.roles_name_label()}
+					label={m.common_name()}
 					type="text"
 					placeholder={m.roles_name_placeholder()}
 					disabled={isBuiltIn || isLoading}
@@ -74,7 +74,7 @@
 				/>
 
 				<FormInput
-					label={m.roles_description_label()}
+					label={m.common_description()}
 					type="text"
 					placeholder={m.roles_description_placeholder()}
 					disabled={isBuiltIn || isLoading}

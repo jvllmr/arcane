@@ -45,7 +45,7 @@
 	}
 
 	function getRegistryDisplayName(item: ContainerRegistry) {
-		if (item.registryType === 'ecr') return m.registry_amazon_ecr();
+		if (item.registryType === 'ecr') return m.amazon_ecr();
 		const url = item.url;
 		if (!url || url === 'docker.io') return m.registry_docker_hub();
 		if (url.includes('ghcr.io')) return m.registry_github_container_registry();
@@ -294,7 +294,7 @@
 				{:else}
 					<TestIcon class="size-4" />
 				{/if}
-				{m.registries_test_connection()}
+				{m.test_connection()}
 			</DropdownMenu.Item>
 		</IfPermitted>
 

@@ -157,12 +157,12 @@
 		{
 			id: 'updates',
 			accessorFn: (row) => getProjectUpdateStatus(row.updateInfo),
-			title: m.containers_update_column(),
+			title: m.updates(),
 			sortable: false,
 			cell: UpdatesCell
 		},
 		{ accessorKey: 'createdAt', title: m.common_created(), sortable: true, cell: CreatedCell },
-		{ accessorKey: 'serviceCount', title: m.compose_services(), sortable: true }
+		{ accessorKey: 'serviceCount', title: m.services(), sortable: true }
 	] satisfies ColumnSpec<Project>[];
 
 	const mobileFields = [
@@ -170,8 +170,8 @@
 		{ id: 'directory', label: m.common_working_directory(), defaultVisible: true },
 		{ id: 'provider', label: m.projects_col_provider(), defaultVisible: true },
 		{ id: 'status', label: m.common_status(), defaultVisible: true },
-		{ id: 'updates', label: m.containers_update_column(), defaultVisible: true },
-		{ id: 'serviceCount', label: m.compose_services(), defaultVisible: true },
+		{ id: 'updates', label: m.updates(), defaultVisible: true },
+		{ id: 'serviceCount', label: m.services(), defaultVisible: true },
 		{ id: 'createdAt', label: m.common_created(), defaultVisible: true }
 	];
 
@@ -252,11 +252,11 @@
 		{#if item.gitOpsManagedBy}
 			<GitBranchIcon class="size-4" />
 			<a class="font-medium hover:underline" href="/environments/{envId}/gitops">
-				{m.projects_provider_git()}
+				{m.git()}
 			</a>
 		{:else}
 			<ProjectsIcon class="size-4" />
-			<span>{m.projects_provider_local()}</span>
+			<span>{m.local()}</span>
 		{/if}
 	</div>
 {/snippet}
@@ -354,13 +354,13 @@
 				type: 'component',
 				getValue: (item: Project) => ({
 					icon: item.gitOpsManagedBy ? GitBranchIcon : ProjectsIcon,
-					text: item.gitOpsManagedBy ? m.projects_provider_git() : m.projects_provider_local()
+					text: item.gitOpsManagedBy ? m.git() : m.local()
 				}),
 				component: ProviderField,
 				show: mobileFieldVisibility['provider'] ?? true
 			},
 			{
-				label: m.compose_services(),
+				label: m.services(),
 				getValue: (item: Project) => {
 					const serviceCount = item.serviceCount ? Number(item.serviceCount) : (item.services?.length ?? 0);
 					return `${serviceCount} ${Number(serviceCount) === 1 ? 'service' : 'services'}`;

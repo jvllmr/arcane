@@ -245,7 +245,7 @@
 {#snippet versionDisplay(label: string, version: string, bgClass: string, textClass: string = '')}
 	<div class="flex items-center justify-between">
 		<div class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
-			{#if label === m.image_update_current_label()}
+			{#if label === m.common_current()}
 				<BoxIcon class="size-3" />
 			{:else}
 				<ArrowRightIcon class="size-3" />
@@ -267,7 +267,7 @@
 					class="group flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-xs font-medium text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md"
 				>
 					<CircleArrowUpIcon class="size-3" />
-					{m.containers_update_container()}
+					{m.update_container()}
 				</button>
 			{:else}
 				<button
@@ -346,7 +346,7 @@
 	<div class="bg-transparent p-4">
 		<div class="space-y-3">
 			<div class="space-y-2 text-xs">
-				{@render versionDisplay(m.image_update_current_label(), currentVersion, 'bg-muted', '')}
+				{@render versionDisplay(m.common_current(), currentVersion, 'bg-muted', '')}
 				{#if latestVersion}
 					{@render versionDisplay(latestLabel, latestVersion, latestBg, latestText)}
 				{/if}

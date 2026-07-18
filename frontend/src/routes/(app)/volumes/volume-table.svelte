@@ -141,10 +141,10 @@
 			destructive: true,
 			run: (id) => volumeService.deleteVolume(idToName.get(id)?.trim() || m.common_unknown()),
 			messages: {
-				success: (count) => m.common_bulk_remove_success({ count, resource: m.volumes_title() }),
+				success: (count) => m.common_bulk_remove_success({ count, resource: m.resource_volumes_cap() }),
 				partial: (success, total, failed) =>
-					m.common_bulk_remove_partial({ success, total, failed, resource: m.volumes_title() }),
-				failure: () => m.common_bulk_remove_failed({ count: idsToDelete.length, resource: m.volumes_title() })
+					m.common_bulk_remove_partial({ success, total, failed, resource: m.resource_volumes_cap() }),
+				failure: () => m.common_bulk_remove_failed({ count: idsToDelete.length, resource: m.resource_volumes_cap() })
 			},
 			setLoading: (loading) => (isLoading.removing = loading),
 			onComplete: async (result) => {
@@ -316,6 +316,6 @@
 
 {#snippet CustomViewOptions()}
 	<DropdownMenu.CheckboxItem checked={showInternal} onCheckedChange={(v) => setShowInternal(!!v)}>
-		{`${m.common_show()} ${m.internal()} ${m.volumes_title()}`}
+		{`${m.common_show()} ${m.internal()} ${m.resource_volumes_cap()}`}
 	</DropdownMenu.CheckboxItem>
 {/snippet}

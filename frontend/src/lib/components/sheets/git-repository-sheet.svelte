@@ -67,7 +67,7 @@
 			case 'ssh':
 				return m.git_repository_auth_ssh();
 			default:
-				return m.git_repository_auth_none();
+				return m.none();
 		}
 	}
 
@@ -166,7 +166,7 @@
 						<span>{selectedAuthType.label}</span>
 					</Select.Trigger>
 					<Select.Content>
-						<Select.Item value="none">{m.git_repository_auth_none()}</Select.Item>
+						<Select.Item value="none">{m.none()}</Select.Item>
 						<Select.Item value="http">{m.git_repository_auth_http()}</Select.Item>
 						<Select.Item value="ssh">{m.git_repository_auth_ssh()}</Select.Item>
 					</Select.Content>

@@ -128,7 +128,7 @@
 		<div class="flex flex-col space-y-1.5">
 			<Card.Title>
 				<h2>
-					{m.common_details_title({ resource: m.resource_container_cap() })}
+					{m.common_details_title({ resource: m.container() })}
 				</h2>
 			</Card.Title>
 			<Card.Description>{m.common_details_description({ resource: m.resource_container() })}</Card.Description>
@@ -303,7 +303,7 @@
 					</div>
 					{#if onViewPortMappings && uniquePorts.total > 0}
 						<button type="button" class="w-fit text-xs font-medium text-primary hover:underline" onclick={onViewPortMappings}>
-							{m.common_view_details()} → {m.containers_nav_networks()}
+							{m.common_view_details()} → {m.resource_networks_cap()}
 						</button>
 					{/if}
 				</Card.Content>
@@ -360,7 +360,7 @@
 			{#if container.config?.user}
 				<Card.Root variant="subtle">
 					<Card.Content class="flex flex-col gap-2 p-4">
-						<div class="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{m.resource_user_cap()}</div>
+						<div class="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{m.common_user()}</div>
 						<div
 							class="cursor-pointer font-mono text-sm font-medium text-foreground select-all"
 							title={m.common_click_to_select()}

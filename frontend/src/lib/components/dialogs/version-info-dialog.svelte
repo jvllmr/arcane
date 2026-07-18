@@ -58,14 +58,14 @@
 
 		{@render infoRowWithCopy(m.version_info_full_commit(), displayInfo.revision, displayInfo.revision)}
 
-		{@render infoRow(m.version_info_go_version(), displayInfo.goVersion || '-')}
+		{@render infoRow(m.go_version(), displayInfo.goVersion || '-')}
 
 		{@render infoRow(m.version_info_node_version(), displayInfo.nodeVersion || '-')}
 
 		{@render infoRow(m.version_info_sveltekit_version(), displayInfo.svelteKitVersion || '-')}
 
 		{#if displayInfo.buildTime && displayInfo.buildTime !== 'unknown'}
-			{@render infoRow(m.version_info_build_time(), displayInfo.buildTime, false)}
+			{@render infoRow(m.build_time(), displayInfo.buildTime, false)}
 		{/if}
 
 		{@render infoRow(m.version_info_build_features(), enabledFeatures || '-')}

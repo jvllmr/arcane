@@ -72,8 +72,8 @@
 	const hasLiveStack = $derived((stack?.services ?? 0) > 0);
 	const canViewSource = $derived(sourceState !== 'forbidden');
 	const tabItems = $derived<TabItem[]>([
-		...(hasLiveStack ? [{ value: 'services', label: m.swarm_services_title(), icon: DockIcon }] : []),
-		...(hasLiveStack ? [{ value: 'tasks', label: m.swarm_tasks_title(), icon: JobsIcon }] : []),
+		...(hasLiveStack ? [{ value: 'services', label: m.services(), icon: DockIcon }] : []),
+		...(hasLiveStack ? [{ value: 'tasks', label: m.tasks(), icon: JobsIcon }] : []),
 		...(canViewSource ? [{ value: 'source', label: 'Source', icon: FileTextIcon }] : [])
 	]);
 	const urlTab = useUrlTab<StackTab>({
@@ -139,13 +139,13 @@
 			if (servicesResult.status === 'fulfilled') {
 				services = servicesResult.value;
 			} else {
-				toast.error(m.common_refresh_failed({ resource: `${m.swarm_services_title()} (${stackName})` }));
+				toast.error(m.common_refresh_failed({ resource: `${m.services()} (${stackName})` }));
 			}
 
 			if (tasksResult.status === 'fulfilled') {
 				tasks = tasksResult.value;
 			} else {
-				toast.error(m.common_refresh_failed({ resource: `${m.swarm_tasks_title()} (${stackName})` }));
+				toast.error(m.common_refresh_failed({ resource: `${m.tasks()} (${stackName})` }));
 			}
 			await refreshSource(true);
 		} finally {
@@ -211,13 +211,13 @@
 
 	const statCards: StatCardConfig[] = $derived([
 		{
-			title: m.swarm_services_title(),
+			title: m.services(),
 			value: totalServices,
 			icon: DockIcon,
 			iconColor: 'text-blue-500'
 		},
 		{
-			title: m.swarm_tasks_title(),
+			title: m.tasks(),
 			value: totalTasks,
 			icon: JobsIcon,
 			iconColor: 'text-indigo-500'

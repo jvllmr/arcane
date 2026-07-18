@@ -38,9 +38,9 @@
 	}
 
 	const columns = [
-		{ accessorKey: 'repoTags', title: m.images_repository(), cell: NameCell },
+		{ accessorKey: 'repoTags', title: m.resource_repository_cap(), cell: NameCell },
 		{ accessorKey: 'inUse', title: m.common_status(), cell: StatusCell },
-		{ id: 'tag', title: m.images_tag(), cell: TagCell },
+		{ id: 'tag', title: m.tag(), cell: TagCell },
 		{ accessorKey: 'size', title: m.common_size(), cell: SizeCell }
 	] satisfies ColumnSpec<ImageSummaryDto>[];
 </script>
@@ -105,13 +105,7 @@
 
 <div class="flex flex-col lg:h-full lg:min-h-0" bind:clientHeight={tableLimit.measuredHeight}>
 	<Card.Root class="flex flex-col lg:h-full lg:min-h-0">
-		<DashTableCardHeader
-			icon={ImagesIcon}
-			href="/images"
-			title={m.images_title()}
-			description={m.images_top_largest()}
-			{isLoading}
-		/>
+		<DashTableCardHeader icon={ImagesIcon} href="/images" title={m.images()} description={m.images_top_largest()} {isLoading} />
 		<Card.Content class="px-0 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col">
 			<ArcaneTable
 				items={{ ...images, data: images.data.slice(0, tableLimit.displayLimit) }}

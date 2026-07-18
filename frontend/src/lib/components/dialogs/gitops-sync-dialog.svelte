@@ -309,7 +309,7 @@
 
 						<SelectWithLabel
 							id="targetType"
-							label={m.webhook_target_type_label()}
+							label={m.target_type()}
 							value={selectedTargetType}
 							options={targetTypeOptions}
 							onValueChange={(value) => (selectedTargetType = value as GitOpsSyncTargetType)}
@@ -552,7 +552,7 @@
 										bind:input={$inputs.preDeployTimeoutSec}
 									/>
 									<FormInput
-										label={m.git_sync_pre_deploy_network_mode_label()}
+										label={m.resource_network_cap()}
 										type="text"
 										placeholder={m.git_sync_pre_deploy_network_mode_placeholder()}
 										helpText={m.git_sync_pre_deploy_network_mode_help()}
@@ -637,7 +637,7 @@
 {#snippet composeBadge(file: FileTreeNode)}
 	{#if composeFileFilter(file)}
 		<span class="ml-auto rounded bg-primary/10 px-2 py-0.5 text-xs text-primary">
-			{m.git_sync_browse_compose_label()}
+			{m.compose()}
 		</span>
 	{/if}
 {/snippet}

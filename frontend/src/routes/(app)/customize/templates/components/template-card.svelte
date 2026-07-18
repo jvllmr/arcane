@@ -54,7 +54,7 @@
 				{template.name}
 			</a>
 			<p class="truncate text-xs text-muted-foreground">
-				{template.isRemote ? m.templates_remote() : m.templates_local()} · {registryName}
+				{template.isRemote ? m.templates_remote() : m.local()} · {registryName}
 			</p>
 		</div>
 		<div class="relative z-10 -mt-1 -mr-1 shrink-0">
@@ -101,7 +101,7 @@
 	{#if template.description}
 		<p class="line-clamp-3 text-sm text-muted-foreground">{template.description}</p>
 	{:else}
-		<p class="text-sm text-muted-foreground italic">{m.templates_no_description()}</p>
+		<p class="text-sm text-muted-foreground italic">{m.common_no_description()}</p>
 	{/if}
 
 	{#if tags.length > 0}

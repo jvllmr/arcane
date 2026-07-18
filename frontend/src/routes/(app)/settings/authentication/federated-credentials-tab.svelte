@@ -129,7 +129,7 @@ steps:
 					onclick={openCreateDialog}
 					loading={isLoading.creating}
 					disabled={isLoading.creating}
-					customLabel={m.federated_credential_create_button()}
+					customLabel={m.create_federated_credential()}
 				/>
 			</IfPermitted>
 		</div>

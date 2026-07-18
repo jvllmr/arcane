@@ -572,7 +572,7 @@
 						{/if}
 						{#if canPull}
 							<DropdownMenu.Item onclick={handleProjectPull} disabled={uiLoading.pull}>
-								{m.images_pull()}
+								{m.pull()}
 							</DropdownMenu.Item>
 						{/if}
 					{/if}

@@ -105,7 +105,7 @@
 		<DashTableCardHeader
 			icon={ContainersIcon}
 			href="/containers"
-			title={m.containers_title()}
+			title={m.containers()}
 			description={m.containers_recent()}
 			{isLoading}
 		/>

@@ -286,14 +286,14 @@
 
 	const columns = [
 		{ accessorKey: 'id', title: m.common_id(), hidden: true },
-		{ accessorKey: 'hostname', title: m.swarm_hostname(), sortable: true },
+		{ accessorKey: 'hostname', title: m.hostname(), sortable: true },
 		{ accessorKey: 'role', title: m.common_role(), sortable: true, cell: RoleCell },
 		{ accessorKey: 'status', title: m.common_status(), sortable: true, cell: StatusCell },
 		{ accessorKey: 'availability', title: m.swarm_availability(), sortable: true, cell: AvailabilityCell },
 		{ accessorKey: 'labels', title: m.common_labels(), cell: LabelsCell },
 		{
 			id: 'agent',
-			title: m.swarm_node_agent_column(),
+			title: m.agent(),
 			accessorFn: (node) => node.agent?.state ?? 'none',
 			cell: AgentCell
 		},
@@ -305,7 +305,7 @@
 		{ id: 'status', label: m.common_status(), defaultVisible: true },
 		{ id: 'availability', label: m.swarm_availability(), defaultVisible: true },
 		{ id: 'labels', label: m.common_labels(), defaultVisible: true },
-		{ id: 'agent', label: m.swarm_node_agent_column(), defaultVisible: true },
+		{ id: 'agent', label: m.agent(), defaultVisible: true },
 		{ id: 'engineVersion', label: m.swarm_engine_version(), defaultVisible: false }
 	];
 
@@ -415,7 +415,7 @@
 				show: mobileFieldVisibility['labels'] ?? true
 			},
 			{
-				label: m.swarm_node_agent_column(),
+				label: m.agent(),
 				getValue: (item: SwarmNodeSummary) => getSwarmNodeAgentLabel(item.agent?.state),
 				icon: EdgeConnectionIcon,
 				iconVariant: 'gray' as const,
@@ -447,7 +447,7 @@
 			onclick={() => setAvailability(item, 'drain')}
 			disabled={!canManageNodes || isLoading || item.availability === 'drain'}
 		>
-			{m.swarm_node_drain()}
+			{m.drain()}
 		</DropdownMenu.Item>
 		<DropdownMenu.Item
 			onclick={() => setAvailability(item, 'active')}

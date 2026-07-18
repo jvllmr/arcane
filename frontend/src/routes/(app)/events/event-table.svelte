@@ -94,12 +94,12 @@
 		},
 		{
 			id: 'resource',
-			title: m.events_col_resource(),
+			title: m.resource(),
 			cell: ResourceCell
 		},
 		{
 			id: 'environment',
-			title: m.events_environment_label(),
+			title: m.resource_environment_cap(),
 			cell: EnvironmentCell
 		},
 		{
@@ -119,8 +119,8 @@
 	const mobileFields = [
 		{ id: 'severity', label: m.events_col_severity(), defaultVisible: true },
 		{ id: 'type', label: m.common_type(), defaultVisible: true },
-		{ id: 'resource', label: m.events_col_resource(), defaultVisible: true },
-		{ id: 'environment', label: m.events_environment_label(), defaultVisible: true },
+		{ id: 'resource', label: m.resource(), defaultVisible: true },
+		{ id: 'environment', label: m.resource_environment_cap(), defaultVisible: true },
 		{ id: 'username', label: m.common_user(), defaultVisible: true },
 		{ id: 'timestamp', label: m.events_col_time(), defaultVisible: true }
 	];
@@ -207,7 +207,7 @@
 				show: mobileFieldVisibility['type'] ?? true
 			},
 			{
-				label: m.events_col_resource(),
+				label: m.resource(),
 				getValue: (item: Event) => {
 					if (!item.resourceType && !item.resourceName) return null;
 					const parts = [item.resourceName || '—'];
@@ -219,7 +219,7 @@
 				show: (mobileFieldVisibility['resource'] ?? true) && (!!item.resourceType || !!item.resourceName)
 			},
 			{
-				label: m.events_environment_label(),
+				label: m.resource_environment_cap(),
 				getValue: (item: Event) => (item.environmentId ? environmentName(item.environmentId) : null),
 				icon: EnvironmentsIcon,
 				iconVariant: 'gray' as const,

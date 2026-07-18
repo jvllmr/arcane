@@ -211,7 +211,7 @@
 											<InputGroup.Root class="flex-1 sm:max-w-[200px]">
 												<InputGroup.Input
 													type="text"
-													placeholder={m.variables_key_placeholder()}
+													placeholder={m.key_placeholder()}
 													bind:value={envVar.key}
 													disabled={isLoading}
 													class="font-mono text-sm"
@@ -235,7 +235,7 @@
 											<InputGroup.Root class="flex-[2]">
 												<InputGroup.Input
 													type="text"
-													placeholder={m.variables_value_placeholder()}
+													placeholder={m.value_placeholder()}
 													bind:value={envVar.value}
 													disabled={isLoading}
 													class="font-mono text-sm"

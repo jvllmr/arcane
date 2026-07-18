@@ -40,7 +40,7 @@
 		if (currentStatus === 'pending') {
 			return { text: m.environments_edge_tunnel_negotiating(), variant: 'amber' };
 		}
-		return { text: m.environments_edge_tunnel_disconnected(), variant: 'red' };
+		return { text: m.disconnected(), variant: 'red' };
 	});
 
 	let tunnelTypeBadge = $derived.by((): { text: string; variant: 'blue' | 'purple' | 'gray' } | null => {
@@ -56,14 +56,14 @@
 			return { text: 'gRPC', variant: 'blue' };
 		}
 
-		return { text: m.environments_edge_tunnel_type_inactive(), variant: 'gray' };
+		return { text: m.inactive(), variant: 'gray' };
 	});
 
 	let mtlsCertificateBadge = $derived.by((): { text: string; variant: 'green' | 'amber' | 'red' } | null => {
 		const cert = environment.edgeMTLSCertificate;
 		if (!cert) return null;
 		if (cert.expired) {
-			return { text: m.environments_edge_mtls_certificate_status_expired(), variant: 'red' };
+			return { text: m.expired(), variant: 'red' };
 		}
 		if (cert.expiringSoon) {
 			return { text: m.environments_edge_mtls_certificate_status_expiring_soon(), variant: 'amber' };

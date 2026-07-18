@@ -37,11 +37,11 @@
 
 	const tabItems: TabItem[] = [
 		{ value: 'basic', label: m.common_basic(), icon: ContainersIcon },
-		{ value: 'environment', label: m.tabs_environment(), icon: VariableIcon },
+		{ value: 'environment', label: m.resource_environment_cap(), icon: VariableIcon },
 		{ value: 'ports', label: m.common_ports(), icon: NetworksIcon },
-		{ value: 'volumes', label: m.tabs_volumes(), icon: VolumesIcon },
+		{ value: 'volumes', label: m.resource_volumes_cap(), icon: VolumesIcon },
 		{ value: 'network', label: m.tabs_network_security(), icon: SecurityIcon },
-		{ value: 'advanced', label: m.tabs_advanced(), icon: SettingsIcon }
+		{ value: 'advanced', label: m.common_advanced(), icon: SettingsIcon }
 	];
 
 	const restartPolicies = [
@@ -53,7 +53,7 @@
 
 	const formSchema = z.object({
 		containerName: z.string().min(1, m.container_name_required()),
-		image: z.string().min(1, m.container_image_required()),
+		image: z.string().min(1, m.image_is_required()),
 		command: z.string().optional().default(''),
 		workingDir: z.string().optional().default(''),
 		user: z.string().optional().default(''),
@@ -308,12 +308,12 @@
 
 							<div class="space-y-3">
 								<Label for="image" class="text-sm font-medium">
-									{m.container_image_label()} <span class="text-destructive">*</span>
+									{m.common_image()} <span class="text-destructive">*</span>
 								</Label>
 								<Input
 									id="image"
 									type="text"
-									placeholder={m.container_image_placeholder()}
+									placeholder={m.nginx_latest_placeholder()}
 									disabled={isLoading}
 									bind:value={$inputs.image.value}
 									class={$inputs.image.error ? 'border-destructive' : ''}
@@ -327,7 +327,7 @@
 
 						<div class="space-y-3">
 							<FormInput
-								label={m.container_command_label()}
+								label={m.common_command()}
 								type="text"
 								placeholder={m.container_command_placeholder()}
 								description={m.container_command_description()}
@@ -341,7 +341,7 @@
 								<FormInput
 									label={m.common_working_directory()}
 									type="text"
-									placeholder={m.container_working_directory_placeholder()}
+									placeholder={m.app_placeholder()}
 									description={m.container_working_directory_description()}
 									disabled={isLoading}
 									bind:input={$inputs.workingDir}
@@ -350,7 +350,7 @@
 
 							<div class="space-y-3">
 								<FormInput
-									label={m.container_user_label()}
+									label={m.common_user()}
 									type="text"
 									placeholder={m.container_user_placeholder()}
 									description={m.container_user_description()}
@@ -361,7 +361,7 @@
 
 							<div class="space-y-3">
 								<FormInput
-									label={m.container_hostname_label()}
+									label={m.hostname()}
 									type="text"
 									placeholder={m.container_hostname_placeholder()}
 									disabled={isLoading}
@@ -450,7 +450,7 @@
 
 							<div class="space-y-6">
 								<div>
-									<h3 class="mb-4 text-base font-semibold sm:text-lg">{m.env_text_format_title()}</h3>
+									<h3 class="mb-4 text-base font-semibold sm:text-lg">{m.text_format()}</h3>
 									<div class="space-y-3">
 										<Textarea
 											placeholder={m.env_text_placeholder()}
@@ -481,14 +481,14 @@
 												<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
 													<div class="flex flex-1 items-center gap-2">
 														<div class="min-w-12 text-xs whitespace-nowrap text-muted-foreground sm:text-sm">
-															{m.port_label_host()}
+															{m.host()}
 														</div>
 														<Input type="text" placeholder="8080" bind:value={mapping.host} disabled={isLoading} class="flex-1" />
 													</div>
 													<span class="hidden text-muted-foreground sm:inline">→</span>
 													<div class="flex flex-1 items-center gap-2">
 														<div class="min-w-16 text-xs whitespace-nowrap text-muted-foreground sm:min-w-20 sm:text-sm">
-															{m.port_label_container()}
+															{m.container()}
 														</div>
 														<Input
 															type="text"
@@ -614,7 +614,7 @@
 
 							<div class="space-y-6">
 								<div>
-									<h3 class="mb-4 text-base font-semibold sm:text-lg">{m.volumes_text_title()}</h3>
+									<h3 class="mb-4 text-base font-semibold sm:text-lg">{m.text_format()}</h3>
 									<div class="space-y-3">
 										<Textarea
 											placeholder={m.volumes_text_placeholder()}
@@ -679,7 +679,7 @@
 						<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
 							<div class="space-y-6">
 								<div class="rounded-lg border p-4 sm:p-6">
-									<h3 class="mb-4 text-base font-semibold sm:text-lg">{m.restart_policy_title()}</h3>
+									<h3 class="mb-4 text-base font-semibold sm:text-lg">{m.common_restart_policy()}</h3>
 									<div class="space-y-4">
 										<SelectWithLabel
 											id="restart-policy"
@@ -743,7 +743,7 @@
 				disabled={isLoading}
 				loading={isLoading}
 				class="w-full sm:w-auto"
-				customLabel={m.common_create_button({ resource: m.resource_container_cap() })}
+				customLabel={m.common_create_button({ resource: m.container() })}
 			/>
 		</div>
 	{/snippet}

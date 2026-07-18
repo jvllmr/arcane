@@ -510,7 +510,7 @@
 							<SuccessIcon class="size-4" />
 							{m.update_center_complete()}
 						</p>
-						<ArcaneButton action="base" onclick={closeAfterComplete} size="sm" customLabel={m.update_center_close()} />
+						<ArcaneButton action="base" onclick={closeAfterComplete} size="sm" customLabel={m.common_close()} />
 					</div>
 				{:else}
 					<p class="mt-4 text-xs text-muted-foreground">

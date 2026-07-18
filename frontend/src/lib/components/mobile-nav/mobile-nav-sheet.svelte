@@ -150,7 +150,7 @@
 
 				<section>
 					<h4 class="mb-4 px-3 text-[11px] font-semibold tracking-widest text-muted-foreground/70 uppercase">
-						{m.sidebar_resources()}
+						{m.resources()}
 					</h4>
 					{@render navItems(resourceItems, true)}
 				</section>
@@ -158,7 +158,7 @@
 				{#if swarmItems.length > 0}
 					<section>
 						<h4 class="mb-4 px-3 text-[11px] font-semibold tracking-widest text-muted-foreground/70 uppercase">
-							{m.swarm_title()}
+							{m.swarm()}
 						</h4>
 						<div class="space-y-2">
 							{#each swarmItems as item (item.url)}

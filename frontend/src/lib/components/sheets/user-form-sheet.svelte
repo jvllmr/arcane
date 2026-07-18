@@ -167,7 +167,7 @@
 			<FormInput
 				label={m.common_email()}
 				type="text"
-				placeholder={m.users_email_placeholder()}
+				placeholder={m.user_example_com_placeholder()}
 				description={m.users_email_description()}
 				autocomplete="email"
 				disabled={isOidcUser}
@@ -208,7 +208,7 @@
 			submitDisabled={isLoading}
 			submitLoading={isLoading}
 			onSubmit={handleSubmit}
-			submitLabel={isEditMode ? m.users_save_changes() : m.common_create_button({ resource: m.resource_user_cap() })}
+			submitLabel={isEditMode ? m.common_save_changes() : m.common_create_button({ resource: m.common_user() })}
 		/>
 	{/snippet}
 </ResponsiveDialog.Root>

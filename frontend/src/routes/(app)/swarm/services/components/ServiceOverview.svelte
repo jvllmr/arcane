@@ -142,7 +142,7 @@
 			<Card.Root variant="subtle">
 				<Card.Content class="flex flex-col gap-2 p-4">
 					<div class="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-						{m.swarm_nodes_column()}
+						{m.nodes()}
 					</div>
 					{#if nodes.length > 0}
 						<div class="flex flex-wrap gap-1.5">

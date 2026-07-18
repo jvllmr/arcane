@@ -154,7 +154,7 @@
 		},
 		{
 			accessorKey: 'lastSyncCommit',
-			title: m.git_sync_commit(),
+			title: m.commit(),
 			sortable: true,
 			cell: CommitCell
 		},
@@ -173,7 +173,7 @@
 		{ id: 'composePath', label: m.git_sync_compose_path(), defaultVisible: true },
 		{ id: 'autoSync', label: m.git_sync_auto_sync(), defaultVisible: true },
 		{ id: 'lastSyncStatus', label: m.git_sync_status(), defaultVisible: true },
-		{ id: 'lastSyncCommit', label: m.git_sync_commit(), defaultVisible: false },
+		{ id: 'lastSyncCommit', label: m.commit(), defaultVisible: false },
 		{ id: 'lastSyncAt', label: m.git_sync_last_sync(), defaultVisible: true }
 	];
 

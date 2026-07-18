@@ -78,7 +78,7 @@
 						disabled={isTestingConnection}
 						loading={isTestingConnection}
 						icon={TestIcon}
-						customLabel={m.environments_test_connection()}
+						customLabel={m.test_connection()}
 						loadingLabel={m.environments_testing_connection()}
 						class="shrink-0"
 					/>

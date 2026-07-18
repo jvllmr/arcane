@@ -115,7 +115,7 @@
 		<Card.Header icon={NetworksIcon}>
 			<div class="flex flex-col space-y-1.5">
 				<Card.Title>
-					<h2>{m.swarm_networks()}</h2>
+					<h2>{m.resource_networks_cap()}</h2>
 				</Card.Title>
 			</div>
 		</Card.Header>

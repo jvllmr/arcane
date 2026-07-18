@@ -109,7 +109,7 @@
 			actions.push({
 				id: 'sync',
 				action: 'base',
-				label: m.sync_environment(),
+				label: m.resource_sync_cap(),
 				onclick: syncEnvironment,
 				disabled: isSyncing,
 				loading: isSyncing,
@@ -173,7 +173,7 @@
 				},
 				{
 					value: 'security',
-					label: m.security_title(),
+					label: m.security(),
 					icon: SecurityIcon
 				},
 				{
@@ -363,7 +363,7 @@
 			onSave: saveEnvironmentSettings,
 			successMessage: m.common_update_success({ resource: m.resource_environment_cap() }),
 			errorMessage: m.common_update_failed({ resource: m.resource_environment() }),
-			onReset: () => toast.info(m.environments_changes_reset())
+			onReset: () => toast.info(m.changes_reset())
 		})
 	);
 
@@ -560,9 +560,9 @@
 			<div class="flex min-w-0 flex-col items-start gap-3 sm:items-end">
 				<div class="hidden flex-wrap items-center gap-2 self-start sm:flex sm:self-end">
 					{#if settingsForm.hasChanges}
-						<span class="text-xs text-orange-600 dark:text-orange-400">{m.environments_unsaved_changes()}</span>
+						<span class="text-xs text-orange-600 dark:text-orange-400">{m.common_unsaved_changes()}</span>
 					{:else}
-						<span class="text-xs text-green-600 dark:text-green-400">{m.environments_all_changes_saved()}</span>
+						<span class="text-xs text-green-600 dark:text-green-400">{m.common_all_changes_saved()}</span>
 					{/if}
 
 					{#if settingsForm.hasChanges}

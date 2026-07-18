@@ -181,7 +181,7 @@
 
 	const imagePruneModes = [
 		{ value: 'dangling', label: m.prune_images_mode_dangling() },
-		{ value: 'all', label: m.prune_images_mode_all() },
+		{ value: 'all', label: m.all_unused() },
 		{ value: 'olderThan', label: m.prune_mode_older_than() }
 	];
 
@@ -278,7 +278,7 @@
 	]);
 </script>
 
-<ResourcePageLayout title={m.images_title()} subtitle={m.images_subtitle()} {actionButtons} {statCards}>
+<ResourcePageLayout title={m.images()} subtitle={m.images_subtitle()} {actionButtons} {statCards}>
 	{#snippet mainContent()}
 		{#if resourcesReady}
 			<ImageTable
@@ -386,7 +386,7 @@
 				</Dialog.Header>
 				<div class="py-4">
 					<PruneModeCard
-						title={m.prune_images_label()}
+						title={m.images()}
 						description={m.prune_images_dialog_description()}
 						modeOptions={imagePruneModes}
 						bind:value={imagePruneMode}
@@ -401,7 +401,7 @@
 						onclick={handlePruneImages}
 						disabled={isPruning}
 						loading={isPruning}
-						customLabel={m.images_prune_action()}
+						customLabel={m.prune_images()}
 						loadingLabel={m.common_action_pruning()}
 					/>
 				</div>

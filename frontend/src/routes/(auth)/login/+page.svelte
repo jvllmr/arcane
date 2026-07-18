@@ -156,7 +156,7 @@
 				<div class="mb-8 h-px w-10 bg-primary/70 shadow-[0_0_8px_var(--primary)]"></div>
 
 				<div class="mb-8 flex flex-col text-left">
-					<h1 class="text-3xl font-semibold tracking-tight sm:text-[2rem]">{m.auth_welcome_back_title()}</h1>
+					<h1 class="text-3xl font-semibold tracking-tight sm:text-[2rem]">{m.welcome_back()}</h1>
 					<p class="mt-2 text-sm text-muted-foreground">{m.auth_login_subtitle()}</p>
 				</div>
 

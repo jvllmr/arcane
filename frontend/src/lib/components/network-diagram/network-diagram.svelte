@@ -471,8 +471,8 @@
 
 <div class={cn('space-y-4', className)}>
 	<div class="flex flex-wrap items-center gap-2">
-		<Badge variant="violet">{m.networks_topology_legend_networks()}</Badge>
-		<Badge variant="emerald">{m.networks_topology_legend_containers()}</Badge>
+		<Badge variant="violet">{m.resource_networks_cap()}</Badge>
+		<Badge variant="emerald">{m.containers()}</Badge>
 		<p class="text-sm text-muted-foreground">{m.networks_topology_hint()}</p>
 		{#if presentDefaults.length > 0}
 			<div class="ml-auto">

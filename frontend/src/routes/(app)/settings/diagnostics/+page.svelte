@@ -220,7 +220,7 @@
 				<ActivityIcon class="size-4 sm:size-5" />
 			</div>
 			<div>
-				<h1 class="text-xl font-semibold tracking-tight sm:text-2xl">{m.diagnostics_title()}</h1>
+				<h1 class="text-xl font-semibold tracking-tight sm:text-2xl">{m.diagnostics()}</h1>
 				<p class="mt-1 text-sm text-muted-foreground">{m.diagnostics_description()}</p>
 			</div>
 		</div>
@@ -230,7 +230,7 @@
 				<span
 					class={cn('size-2 rounded-full', paused ? 'bg-amber-500' : connected ? 'animate-pulse bg-emerald-500' : 'bg-zinc-500')}
 				></span>
-				{paused ? m.diagnostics_status_paused() : connected ? m.diagnostics_status_live() : m.diagnostics_status_connecting()}
+				{paused ? m.paused() : connected ? m.common_live() : m.diagnostics_status_connecting()}
 			</span>
 			<span class="hidden text-xs text-muted-foreground tabular-nums sm:inline"
 				>{m.diagnostics_updated_ago({ ago: agoText })}</span
@@ -239,7 +239,7 @@
 				action="base"
 				tone="outline"
 				size="sm"
-				customLabel={paused ? m.diagnostics_resume() : m.diagnostics_pause()}
+				customLabel={paused ? m.diagnostics_resume() : m.common_pause()}
 				onclick={togglePause}
 			/>
 			<ArcaneButton
@@ -247,7 +247,7 @@
 				tone="outline"
 				size="sm"
 				icon={RefreshIcon}
-				customLabel={m.diagnostics_refresh()}
+				customLabel={m.common_refresh()}
 				onclick={refresh}
 			/>
 		</div>
@@ -262,12 +262,7 @@
 	{#if diag}
 		<!-- Metric tiles -->
 		<div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
-			<DiagnosticStat
-				label={m.diagnostics_stat_goroutines()}
-				value={fmtNum(diag.runtime.goroutines)}
-				icon={ActivityIcon}
-				accent="text-sky-500"
-			/>
+			<DiagnosticStat label={m.goroutines()} value={fmtNum(diag.runtime.goroutines)} icon={ActivityIcon} accent="text-sky-500" />
 			<DiagnosticStat
 				label={m.diagnostics_stat_heap_alloc()}
 				value={fmtBytes(diag.memory.heapAlloc)}
@@ -293,7 +288,7 @@
 				accent="text-rose-500"
 			/>
 			<DiagnosticStat
-				label={m.diagnostics_stat_uptime()}
+				label={m.common_uptime()}
 				value={fmtUptime(diag.runtime.uptimeSeconds)}
 				icon={ClockIcon}
 				accent="text-teal-500"
@@ -306,13 +301,13 @@
 				{@render sectionHeader(m.diagnostics_section_runtime(), CpuIcon)}
 				<div class="divide-y divide-border/40">
 					{@render row(m.diagnostics_runtime_go_version(), diag.runtime.goVersion)}
-					{@render row(m.diagnostics_runtime_platform(), `${diag.runtime.os}/${diag.runtime.arch}`)}
+					{@render row(m.platform(), `${diag.runtime.os}/${diag.runtime.arch}`)}
 					{@render row(m.diagnostics_runtime_gomaxprocs(), diag.runtime.gomaxprocs)}
 					{@render row(m.diagnostics_runtime_num_cpu(), diag.runtime.numCpu)}
-					{@render row(m.diagnostics_runtime_goroutines(), fmtNum(diag.runtime.goroutines))}
+					{@render row(m.goroutines(), fmtNum(diag.runtime.goroutines))}
 					{@render row(m.diagnostics_runtime_ws_workers(), fmtNum(diag.runtime.wsWorkerGoroutines))}
 					{@render row(m.diagnostics_runtime_cgo_calls(), fmtNum(diag.runtime.numCgoCall))}
-					{@render row(m.diagnostics_runtime_uptime(), fmtUptime(diag.runtime.uptimeSeconds))}
+					{@render row(m.common_uptime(), fmtUptime(diag.runtime.uptimeSeconds))}
 				</div>
 			</section>
 
@@ -322,7 +317,7 @@
 				{#if heapBar}
 					<div class="mb-3 flex h-2.5 overflow-hidden rounded-full bg-muted/40">
 						<div class="bg-violet-500" style="width: {heapBar.inuse}%" title={m.diagnostics_mem_in_use()}></div>
-						<div class="bg-violet-500/40" style="width: {heapBar.idle}%" title={m.diagnostics_mem_idle()}></div>
+						<div class="bg-violet-500/40" style="width: {heapBar.idle}%" title={m.idle()}></div>
 						<div class="bg-zinc-500/40" style="width: {heapBar.released}%" title={m.diagnostics_mem_released()}></div>
 					</div>
 					<div class="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
@@ -331,7 +326,7 @@
 							{fmtBytes(diag.memory.heapInuse)}</span
 						>
 						<span
-							><span class="mr-1 inline-block size-2 rounded-full bg-violet-500/40"></span>{m.diagnostics_mem_idle()}
+							><span class="mr-1 inline-block size-2 rounded-full bg-violet-500/40"></span>{m.idle()}
 							{fmtBytes(diag.memory.heapIdle - diag.memory.heapReleased)}</span
 						>
 						<span
@@ -400,9 +395,9 @@
 						<thead class="bg-muted/30 text-xs text-muted-foreground">
 							<tr>
 								<th class="px-3 py-2 font-medium">{m.diagnostics_conn_kind()}</th>
-								<th class="px-3 py-2 font-medium">{m.diagnostics_conn_resource()}</th>
+								<th class="px-3 py-2 font-medium">{m.resource()}</th>
 								<th class="px-3 py-2 font-medium">{m.diagnostics_conn_client_ip()}</th>
-								<th class="px-3 py-2 font-medium">{m.diagnostics_conn_user()}</th>
+								<th class="px-3 py-2 font-medium">{m.common_user()}</th>
 								<th class="px-3 py-2 font-medium">{m.diagnostics_conn_since()}</th>
 							</tr>
 						</thead>
@@ -448,7 +443,7 @@
 								class="mt-1 max-h-96 overflow-auto rounded-lg border border-border/60 bg-background p-3 font-mono text-[11px] leading-relaxed">{dumpLoading[
 									name
 								]
-									? m.diagnostics_dump_loading()
+									? m.common_loading()
 									: dumpText[name] || m.diagnostics_dump_empty()}</pre>
 						</Collapsible.Content>
 					</Collapsible.Root>

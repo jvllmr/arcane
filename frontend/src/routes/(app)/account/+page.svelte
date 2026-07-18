@@ -297,7 +297,7 @@
 					<UserIcon class="size-4 sm:size-5" />
 				</div>
 				<div class="min-w-0">
-					<h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">{m.account_title()}</h1>
+					<h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">{m.common_account()}</h1>
 					<p class="mt-1 text-sm text-muted-foreground">{m.account_subtitle()}</p>
 				</div>
 			</div>
@@ -362,7 +362,7 @@
 										<div
 											class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover/avatar:opacity-100"
 										>
-											<div class="text-xs font-medium text-white">{m.account_upload_overlay()}</div>
+											<div class="text-xs font-medium text-white">{m.upload()}</div>
 										</div>
 									</ImageCropper.UploadTrigger>
 									<div class="flex min-w-0 flex-col items-start gap-1">
@@ -376,7 +376,7 @@
 													action="remove"
 													size="sm"
 													tone="ghost"
-													customLabel={m.account_remove_photo()}
+													customLabel={m.common_remove()}
 													showLabel={true}
 													class="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
 													onclick={removeAvatar}
@@ -405,7 +405,7 @@
 							<TextInputWithLabel
 								id="account-display-name"
 								bind:value={profileDisplayName}
-								label={m.account_display_name_label()}
+								label={m.common_display_name()}
 								placeholder={m.account_display_name_placeholder()}
 								disabled={isOidcUser}
 							/>
@@ -413,7 +413,7 @@
 								id="account-email"
 								type="email"
 								bind:value={profileEmail}
-								label={m.account_email_label()}
+								label={m.common_email()}
 								placeholder={m.account_email_placeholder()}
 								disabled={isOidcUser}
 							/>
@@ -445,7 +445,7 @@
 				{#if !isOidcUser}
 					<Card class="overflow-hidden">
 						<div class="border-b p-4 sm:p-6">
-							<h2 class="text-base font-semibold tracking-tight sm:text-lg">{m.account_password()}</h2>
+							<h2 class="text-base font-semibold tracking-tight sm:text-lg">{m.common_password()}</h2>
 							<p class="mt-1 text-xs text-muted-foreground sm:text-sm">{m.account_password_desc()}</p>
 						</div>
 						<div class="space-y-5 p-4 sm:p-6">
@@ -606,7 +606,7 @@
 						</div>
 						<div class="flex items-center justify-between gap-4 p-3">
 							<div class="min-w-0">
-								<div class="text-sm font-medium">{m.account_language()}</div>
+								<div class="text-sm font-medium">{m.language()}</div>
 								<div class="text-xs text-muted-foreground">{m.account_language_desc()}</div>
 							</div>
 							<LocalePicker inline />

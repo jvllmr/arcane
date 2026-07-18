@@ -362,7 +362,7 @@
 		title={(item: Environment) => item.name || item.id}
 		subtitle={(item: Environment) => ((mobileFieldVisibility['id'] ?? true) ? item.id : null)}
 		badges={[
-			{ variant: 'green', text: m.sidebar_environment_label() },
+			{ variant: 'green', text: m.resource_environment_cap() },
 			...(environmentStore.selected?.id === item.id ? [{ variant: 'blue' as const, text: m.common_current() }] : [])
 		]}
 		fields={[
@@ -428,7 +428,7 @@
 
 		<DropdownMenu.Item onclick={() => handleTest(item.id)} disabled={isLoading.testing}>
 			<TestIcon class="size-4" />
-			{m.environments_test_connection()}
+			{m.test_connection()}
 		</DropdownMenu.Item>
 
 		{#if item.id !== '0'}

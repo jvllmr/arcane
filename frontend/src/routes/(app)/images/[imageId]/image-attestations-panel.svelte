@@ -155,7 +155,7 @@
 					</div>
 					<div>
 						<div class="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-							{m.images_attestations_platform()}
+							{m.platform()}
 						</div>
 						<p class="mt-1 text-xs">{attestation.platform || m.common_na()}</p>
 					</div>

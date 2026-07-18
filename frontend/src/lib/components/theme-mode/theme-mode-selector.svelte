@@ -14,7 +14,7 @@
 	const options = $derived([
 		{ value: 'light', label: m.sidebar_light_mode(), icon: SunIcon },
 		{ value: 'dark', label: m.sidebar_dark_mode(), icon: MoonIcon },
-		{ value: 'system', label: m.sidebar_system_mode(), icon: MonitorIcon }
+		{ value: 'system', label: m.system(), icon: MonitorIcon }
 	] as const);
 
 	const current = $derived(userPrefersMode.current);

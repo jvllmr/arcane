@@ -101,7 +101,7 @@
 									{#if mount.type === 'volume' && mount.driver}
 										<Card.Root variant="outlined">
 											<Card.Content class="flex flex-col p-3">
-												<div class="mb-2 text-xs font-semibold text-muted-foreground">{m.container_driver()}</div>
+												<div class="mb-2 text-xs font-semibold text-muted-foreground">{m.common_driver()}</div>
 												<div class="text-sm font-medium text-foreground">
 													{mount.driver}
 												</div>

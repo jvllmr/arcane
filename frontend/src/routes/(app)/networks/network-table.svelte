@@ -101,10 +101,10 @@
 			destructive: true,
 			run: (id) => networkService.deleteNetwork(id),
 			messages: {
-				success: (count) => m.common_bulk_delete_success({ count, resource: m.networks_title() }),
+				success: (count) => m.common_bulk_delete_success({ count, resource: m.resource_networks_cap() }),
 				partial: (success, total, failed) =>
-					m.common_bulk_delete_partial({ success, total, failed, resource: m.networks_title() }),
-				failure: () => m.common_bulk_delete_failed({ count: ids.length, resource: m.networks_title() })
+					m.common_bulk_delete_partial({ success, total, failed, resource: m.resource_networks_cap() }),
+				failure: () => m.common_bulk_delete_failed({ count: ids.length, resource: m.resource_networks_cap() })
 			},
 			setLoading: (loading) => (isLoading.remove = loading),
 			onComplete: async (result) => {

@@ -37,7 +37,7 @@
 </script>
 
 <SettingsPageLayout
-	title={m.activity_settings_title()}
+	title={m.activity()}
 	description={m.activity_settings_description()}
 	icon={ActivityIcon}
 	pageType="form"

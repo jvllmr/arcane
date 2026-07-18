@@ -89,7 +89,7 @@
 	<div class="flex flex-wrap items-center gap-2 border-b border-border/60 bg-muted/30 px-3 py-2">
 		<span class="flex items-center gap-1.5 text-xs font-medium">
 			<span class={cn('size-2 rounded-full', connected ? 'bg-emerald-500' : 'bg-zinc-500')}></span>
-			{connected ? m.diagnostics_logs_streaming() : m.diagnostics_logs_disconnected()}
+			{connected ? m.diagnostics_logs_streaming() : m.disconnected()}
 		</span>
 		<span class="text-xs text-muted-foreground tabular-nums">{m.diagnostics_logs_count({ count: filtered.length })}</span>
 
@@ -100,9 +100,9 @@
 				aria-label={m.diagnostics_logs_all_levels()}
 			>
 				<option value="all">{m.diagnostics_logs_all_levels()}</option>
-				<option value="error">{m.diagnostics_logs_level_error()}</option>
+				<option value="error">{m.common_error()}</option>
 				<option value="warn">{m.diagnostics_logs_level_warn()}</option>
-				<option value="info">{m.diagnostics_logs_level_info()}</option>
+				<option value="info">{m.info()}</option>
 				<option value="debug">{m.diagnostics_logs_level_debug()}</option>
 			</select>
 			<input
@@ -112,14 +112,14 @@
 			/>
 			<label class="flex items-center gap-1 text-xs text-muted-foreground">
 				<input type="checkbox" bind:checked={autoScroll} class="size-3.5" />
-				{m.diagnostics_logs_auto_scroll()}
+				{m.common_autoscroll()}
 			</label>
 			<ArcaneButton
 				action="base"
 				tone="ghost"
 				size="sm"
 				icon={TrashIcon}
-				customLabel={m.diagnostics_logs_clear()}
+				customLabel={m.common_clear()}
 				onclick={() => (logs = [])}
 			/>
 		</div>

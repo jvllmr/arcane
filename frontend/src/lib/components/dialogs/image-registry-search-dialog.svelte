@@ -123,7 +123,7 @@
 				</div>
 
 				<div class="space-y-2">
-					<Label for="image-registry-search-tag">{m.images_tag()}</Label>
+					<Label for="image-registry-search-tag">{m.tag()}</Label>
 					<InputGroup.Root>
 						<InputGroup.Input
 							id="image-registry-search-tag"
@@ -169,7 +169,7 @@
 								type="button"
 								size="sm"
 								icon={DownloadIcon}
-								customLabel={m.images_search_pull_result()}
+								customLabel={m.pull()}
 								loading={pullingImageName === buildPullRef(result.name)}
 								disabled={!!pullingImageName}
 								onclick={() => pullImage(result.name)}

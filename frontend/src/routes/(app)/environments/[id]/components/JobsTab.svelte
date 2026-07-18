@@ -132,10 +132,10 @@
 
 	const categories = [
 		{ id: 'monitoring', label: m.jobs_monitoring_heading() },
-		{ id: 'maintenance', label: m.jobs_maintenance_heading() },
-		{ id: 'security', label: m.jobs_security_heading() },
-		{ id: 'updates', label: m.jobs_updates_heading() },
-		{ id: 'sync', label: m.jobs_sync_heading() },
+		{ id: 'maintenance', label: m.maintenance() },
+		{ id: 'security', label: m.security() },
+		{ id: 'updates', label: m.updates() },
+		{ id: 'sync', label: m.resource_sync_cap() },
 		{ id: 'telemetry', label: m.jobs_telemetry_heading() }
 	];
 
@@ -310,7 +310,7 @@
 													<div class="space-y-3 border-t border-border/20 pt-3">
 														<div class="space-y-1">
 															<Label class="text-sm font-medium">
-																{m.auto_update_excluded_containers()}
+																{m.excluded_containers()}
 																{#await containersPromise then containers}
 																	<span class="ml-1 font-normal text-muted-foreground">
 																		({containers.filter((c) => excludedContainers.has(getContainerName(c))).length})
@@ -365,7 +365,7 @@
 
 														<div class="space-y-1">
 															<Label class="text-sm font-medium">
-																{m.auto_heal_excluded_containers()}
+																{m.excluded_containers()}
 																{#await containersPromise then containers}
 																	<span class="ml-1 font-normal text-muted-foreground">
 																		({containers.filter((c) => autoHealExcludedContainers.has(getContainerName(c))).length})

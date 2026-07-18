@@ -278,7 +278,7 @@
 		isSwarmInitialized
 			? [
 					{
-						title: m.swarm_cluster_stat_cluster(),
+						title: m.cluster(),
 						value: swarmInfo?.id ? swarmInfo.id.slice(0, 12) : m.swarm_cluster_not_initialized(),
 						icon: SettingsIcon,
 						iconColor: 'text-blue-500'
@@ -301,7 +301,7 @@
 </script>
 
 <ResourcePageLayout
-	title={m.swarm_cluster_title()}
+	title={m.cluster()}
 	subtitle={m.swarm_cluster_subtitle()}
 	icon={SettingsIcon}
 	class="pb-6"
@@ -361,7 +361,7 @@
 						</Card.Header>
 						<Card.Content class="space-y-4 pb-6">
 							<div class="space-y-2">
-								<div class="text-xs font-medium text-muted-foreground">{m.swarm_cluster_manager_token_label()}</div>
+								<div class="text-xs font-medium text-muted-foreground">{m.manager()}</div>
 								<div class="flex items-center gap-2">
 									<InputGroup.Root class="flex-1">
 										<InputGroup.Input
@@ -392,7 +392,7 @@
 								</div>
 							</div>
 							<div class="space-y-2">
-								<div class="text-xs font-medium text-muted-foreground">{m.swarm_cluster_worker_token_label()}</div>
+								<div class="text-xs font-medium text-muted-foreground">{m.worker()}</div>
 								<div class="flex items-center gap-2">
 									<InputGroup.Root class="flex-1">
 										<InputGroup.Input

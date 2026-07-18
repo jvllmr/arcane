@@ -130,7 +130,7 @@
 					onclick={handleSave}
 					disabled={!canSave || ui.isLoadingTemplate}
 					loading={ui.saving}
-					loadingLabel={m.common_action_saving()}
+					loadingLabel={m.common_saving()}
 				/>
 			</div>
 		</div>

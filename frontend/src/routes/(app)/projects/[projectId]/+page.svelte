@@ -145,7 +145,7 @@
 	const formSchema = z
 		.object({
 			name: z.string().min(1, m.compose_project_name_required()),
-			composeContent: z.string().min(1, m.compose_compose_content_required()),
+			composeContent: z.string().min(1, m.compose_content_is_required()),
 			envContent: z.string().optional().default(''),
 			overrideContent: z.string().optional().default('')
 		})
@@ -385,7 +385,7 @@
 	const tabItems = $derived<TabItem[]>([
 		{
 			value: 'services',
-			label: m.compose_nav_services(),
+			label: m.services(),
 			icon: LayersIcon,
 			badge: project?.serviceCount
 		},
@@ -398,7 +398,7 @@
 			? [
 					{
 						value: 'logs',
-						label: m.compose_nav_logs(),
+						label: m.common_logs(),
 						icon: FileTextIcon,
 						disabled: project?.status !== 'running'
 					}
@@ -1399,7 +1399,7 @@
 							: null}
 						<div class="mt-1 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
 							<div class="flex items-center gap-1.5">
-								<span class="hidden sm:inline">{m.git_sync_commit()}:</span>
+								<span class="hidden sm:inline">{m.commit()}:</span>
 								{#if commitUrl}
 									<a
 										href={commitUrl}
@@ -1481,7 +1481,7 @@
 							<AlertIcon class="size-4" />
 							<div class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
 								<div class="flex-1">
-									<Alert.Title>{m.git_title()} {m.read_only_label()}</Alert.Title>
+									<Alert.Title>{m.git()} {m.read_only_label()}</Alert.Title>
 									<Alert.Description>
 										{m.git_managed_readonly_alert()}
 										<br />
@@ -1491,7 +1491,7 @@
 													? toGitCommitUrl(project.gitRepositoryURL, project.lastSyncCommit)
 													: null}
 												<div class="flex items-center gap-1.5 font-mono text-xs">
-													<span class="text-muted-foreground">{m.git_sync_commit()}:</span>
+													<span class="text-muted-foreground">{m.commit()}:</span>
 													{#if commitUrl}
 														<a
 															href={commitUrl}

@@ -106,7 +106,7 @@
 				return m.swarm_easy_join_result_joined_unverified();
 			case 'failed':
 			default:
-				return m.swarm_easy_join_result_failed();
+				return m.common_failed();
 		}
 	}
 </script>
@@ -162,8 +162,8 @@
 														role: event.currentTarget.value as 'worker' | 'manager'
 													})}
 											>
-												<option value="worker">{m.swarm_easy_join_role_worker()}</option>
-												<option value="manager">{m.swarm_easy_join_role_manager()}</option>
+												<option value="worker">{m.worker()}</option>
+												<option value="manager">{m.manager()}</option>
 											</select>
 										</label>
 										<label class="space-y-1 text-xs">
@@ -176,9 +176,9 @@
 														availability: event.currentTarget.value as 'active' | 'pause' | 'drain'
 													})}
 											>
-												<option value="active">{m.swarm_easy_join_availability_active()}</option>
-												<option value="pause">{m.swarm_easy_join_availability_pause()}</option>
-												<option value="drain">{m.swarm_easy_join_availability_drain()}</option>
+												<option value="active">{m.common_active()}</option>
+												<option value="pause">{m.common_pause()}</option>
+												<option value="drain">{m.drain()}</option>
 											</select>
 										</label>
 									</div>

@@ -110,15 +110,15 @@
 	const hasDirectories = $derived(entries.some((entry) => entry.isDirectory));
 	const canManageFiles = $derived(!!onCreateFile && !!onCreateFolder && !!onRename && !!onMove && !!onDelete);
 	const dialogTitle = $derived.by(() => {
-		if (dialogMode === 'upload') return m.project_file_upload_title();
-		if (dialogMode === 'move') return m.project_file_move_title();
-		if (dialogMode === 'rename') return m.project_file_rename_title();
+		if (dialogMode === 'upload') return m.upload_file();
+		if (dialogMode === 'move') return m.move();
+		if (dialogMode === 'rename') return m.rename();
 		return dialogMode === 'create_folder' ? m.project_file_create_folder_title() : m.project_file_create_file_title();
 	});
 	const dialogActionLabel = $derived.by(() => {
-		if (dialogMode === 'upload') return m.project_file_upload_action();
-		if (dialogMode === 'move') return m.project_file_move_action();
-		return dialogMode === 'rename' ? m.project_file_rename_action() : m.common_create();
+		if (dialogMode === 'upload') return m.upload();
+		if (dialogMode === 'move') return m.move();
+		return dialogMode === 'rename' ? m.rename() : m.common_create();
 	});
 	const hasDestinationPicker = $derived(
 		dialogMode === 'create_file' || dialogMode === 'create_folder' || dialogMode === 'upload' || dialogMode === 'move'
@@ -456,7 +456,7 @@
 	function handleDelete(entry: ManagedProjectFileEntry) {
 		if (disabled) return;
 		openConfirmDialog({
-			title: m.project_file_delete_title({ name: entry.relativePath }),
+			title: m.delete_name({ name: entry.relativePath }),
 			message: m.project_file_delete_confirm({ name: entry.relativePath }),
 			confirm: {
 				label: m.common_delete(),
@@ -498,11 +498,11 @@
 							icon={CreateFolderIcon}
 							showLabel={false}
 							{disabled}
-							customLabel={m.project_file_new_folder()}
+							customLabel={m.new_folder()}
 							onclick={() => openCreateDialog('create_folder')}
 						/>
 					</Tooltip.Trigger>
-					<Tooltip.Content>{m.project_file_new_folder()}</Tooltip.Content>
+					<Tooltip.Content>{m.new_folder()}</Tooltip.Content>
 				</Tooltip.Root>
 				<Tooltip.Root>
 					<Tooltip.Trigger>
@@ -514,11 +514,11 @@
 							icon={UploadIcon}
 							showLabel={false}
 							{disabled}
-							customLabel={m.project_file_upload_file()}
+							customLabel={m.upload_file()}
 							onclick={() => openUploadDialog()}
 						/>
 					</Tooltip.Trigger>
-					<Tooltip.Content>{m.project_file_upload_file()}</Tooltip.Content>
+					<Tooltip.Content>{m.upload_file()}</Tooltip.Content>
 				</Tooltip.Root>
 			</div>
 		{/if}
@@ -665,7 +665,7 @@
 											<EditIcon class="size-3.5" />
 										</button>
 									</Tooltip.Trigger>
-									<Tooltip.Content>{m.project_file_rename_action()}</Tooltip.Content>
+									<Tooltip.Content>{m.rename()}</Tooltip.Content>
 								</Tooltip.Root>
 								<Tooltip.Root>
 									<Tooltip.Trigger>
@@ -679,14 +679,14 @@
 											<FolderMoveIcon class="size-3.5" />
 										</button>
 									</Tooltip.Trigger>
-									<Tooltip.Content>{m.project_file_move_action()}</Tooltip.Content>
+									<Tooltip.Content>{m.move()}</Tooltip.Content>
 								</Tooltip.Root>
 								<Tooltip.Root>
 									<Tooltip.Trigger>
 										<button
 											type="button"
 											class="inline-flex size-6 items-center justify-center rounded text-destructive hover:bg-destructive/10"
-											aria-label={m.project_file_delete_label({ name: row.relativePath })}
+											aria-label={m.delete_name({ name: row.relativePath })}
 											{disabled}
 											onclick={() => handleDelete(row)}
 										>
@@ -739,7 +739,7 @@
 
 			{#if dialogMode !== 'move'}
 				<div class="space-y-2">
-					<Label for="project-file-name">{m.project_file_name_label()}</Label>
+					<Label for="project-file-name">{m.common_name()}</Label>
 					<Input
 						id="project-file-name"
 						bind:value={dialogName}

@@ -54,7 +54,7 @@
 		{ accessorKey: 'hostPort', title: m.ports_host_port(), sortable: true, cell: HostPortCell },
 		{ accessorKey: 'containerPort', title: m.ports_container_port(), sortable: true, cell: ContainerPortCell },
 		{ accessorKey: 'protocol', title: m.common_type(), sortable: true, cell: ProtocolCell },
-		{ accessorKey: 'containerName', title: m.ports_container_name(), sortable: true, cell: ContainerCell },
+		{ accessorKey: 'containerName', title: m.container(), sortable: true, cell: ContainerCell },
 		{ accessorKey: 'hostIp', title: m.ports_host_ip(), sortable: true, cell: HostIpCell },
 		{ accessorKey: 'isPublished', title: m.common_status(), sortable: true, cell: PublishedCell }
 	] satisfies ColumnSpec<PortMappingDto>[];
@@ -63,7 +63,7 @@
 		{ id: 'hostPort', label: m.ports_host_port(), defaultVisible: true },
 		{ id: 'containerPort', label: m.ports_container_port(), defaultVisible: true },
 		{ id: 'protocol', label: m.common_type(), defaultVisible: true },
-		{ id: 'containerName', label: m.ports_container_name(), defaultVisible: true },
+		{ id: 'containerName', label: m.container(), defaultVisible: true },
 		{ id: 'hostIp', label: m.ports_host_ip(), defaultVisible: true },
 		{ id: 'isPublished', label: m.common_status(), defaultVisible: true }
 	];
@@ -96,9 +96,7 @@
 {/snippet}
 
 {#snippet PublishedCell({ item }: { item: PortMappingDto })}
-	<Badge variant={item.isPublished ? 'sky' : 'gray'}
-		>{item.isPublished ? m.ports_published_label() : m.ports_exposed_label()}</Badge
-	>
+	<Badge variant={item.isPublished ? 'sky' : 'gray'}>{item.isPublished ? m.published() : m.ports_exposed_label()}</Badge>
 {/snippet}
 
 {#snippet PortMobileCardSnippet({
@@ -121,7 +119,7 @@
 				(mobileFieldVisibility['isPublished'] ?? true)
 					? {
 							variant: item.isPublished ? 'blue' : 'gray',
-							text: String(item.isPublished ? m.ports_published_label() : m.ports_exposed_label())
+							text: String(item.isPublished ? m.published() : m.ports_exposed_label())
 						}
 					: null
 		]}
@@ -150,7 +148,7 @@
 				show: mobileFieldVisibility['hostIp'] ?? true
 			},
 			{
-				label: m.ports_container_name(),
+				label: m.container(),
 				getValue: (item: PortMappingDto) => item.containerName,
 				icon: ContainersIcon,
 				iconVariant: 'gray' as const,

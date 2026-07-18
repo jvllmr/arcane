@@ -125,9 +125,9 @@
 		</h3>
 		<div class="grid gap-3 sm:grid-cols-4">
 			{@render statCard(m.common_running(), info.ContainersRunning ?? 0, 'emerald')}
-			{@render statCard(m.docker_info_paused_label(), info.ContainersPaused ?? 0, 'amber')}
+			{@render statCard(m.paused(), info.ContainersPaused ?? 0, 'amber')}
 			{@render statCard(m.common_stopped(), info.ContainersStopped ?? 0, 'red')}
-			{@render statCard(m.docker_info_images_label(), info.Images ?? 0, 'blue')}
+			{@render statCard(m.images(), info.Images ?? 0, 'blue')}
 		</div>
 	</div>
 {/snippet}
@@ -135,7 +135,7 @@
 {#snippet resourcesSection(info: DockerInfo)}
 	<div>
 		<h3 class="mb-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-			{m.docker_info_resources_section()}
+			{m.resources()}
 		</h3>
 		<div class="grid gap-3 sm:grid-cols-4">
 			<div class="rounded-lg border p-3">
@@ -150,7 +150,7 @@
 				<Badge variant="outline" class="text-sm font-semibold">{info.MemTotal ? bytes.format(info.MemTotal) : '-'}</Badge>
 			</div>
 			<div class="rounded-lg border p-3">
-				<div class="mb-1 text-[10px] tracking-tight text-muted-foreground uppercase">{m.docker_info_goroutines()}</div>
+				<div class="mb-1 text-[10px] tracking-tight text-muted-foreground uppercase">{m.goroutines()}</div>
 				<Badge variant="outline" class="text-sm font-semibold">{info.NGoroutines ?? 0}</Badge>
 			</div>
 			<div class="rounded-lg border p-3">
@@ -189,7 +189,7 @@
 		<div class="space-y-1 rounded-lg border p-2.5">
 			{@render infoRow(m.docker_info_server_version_label(), info.ServerVersion)}
 			{@render infoRow(m.docker_info_api_version_label(), info.apiVersion)}
-			{@render infoRow(m.docker_info_go_version_label(), info.goVersion)}
+			{@render infoRow(m.go_version(), info.goVersion)}
 			<div class="grid grid-cols-[minmax(112px,38%)_minmax(0,1fr)] items-start gap-x-4 gap-y-1">
 				<span class="text-[10px] tracking-tight text-muted-foreground uppercase">{m.docker_info_git_commit_label()}</span>
 				<div class="flex items-center justify-end gap-2">
@@ -199,7 +199,7 @@
 					{/if}
 				</div>
 			</div>
-			{@render infoRow(m.docker_info_build_time_label(), formatTime(info.buildTime), false)}
+			{@render infoRow(m.build_time(), formatTime(info.buildTime), false)}
 			{@render infoRow(m.docker_info_experimental(), info.ExperimentalBuild ? m.common_yes() : m.common_no(), false)}
 			{@render infoRow(m.docker_info_containerd_commit_label(), shortCommit(info.ContainerdCommit), true)}
 			{@render infoRow(m.docker_info_runc_commit_label(), shortCommit(info.RuncCommit), true)}
@@ -221,7 +221,7 @@
 			{@render infoRow(m.docker_info_logging_driver_label(), info.LoggingDriver)}
 			{@render infoRow(m.docker_info_cgroup_driver_label(), info.CgroupDriver)}
 			{@render infoRow(m.docker_info_cgroup_version_label(), info.CgroupVersion)}
-			{@render infoRow(m.docker_info_isolation(), info.Isolation)}
+			{@render infoRow(m.isolation(), info.Isolation)}
 			{@render infoRow(m.docker_info_init_binary(), info.InitBinary)}
 			{@render infoRow(m.docker_info_default_runtime(), info.DefaultRuntime)}
 			{@render infoRow(m.docker_info_debug_label(), info.Debug ? m.common_yes() : m.common_no(), false)}
@@ -290,7 +290,7 @@
 {#snippet securitySection(info: DockerInfo)}
 	<div class="space-y-2">
 		<h3 class="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-			{m.security_title()} & {m.docker_info_runtimes()}
+			{m.security()} & {m.docker_info_runtimes()}
 		</h3>
 		<div class="space-y-2 rounded-lg border p-2.5">
 			{@render tagGroup(m.docker_info_security_options(), info.SecurityOptions)}
@@ -307,7 +307,7 @@
 		<div class="space-y-2 rounded-lg border p-2.5">
 			{@render tagGroup(m.resource_volumes_cap(), info.Plugins?.Volume)}
 			{@render tagGroup(m.resource_networks_cap(), info.Plugins?.Network)}
-			{@render tagGroup(m.docker_info_logs_plugin(), info.Plugins?.Log)}
+			{@render tagGroup(m.common_logs(), info.Plugins?.Log)}
 			{@render tagGroup(m.docker_info_authorization_plugin(), info.Plugins?.Authorization)}
 		</div>
 	</div>
@@ -323,14 +323,14 @@
 	}}
 	<div class="space-y-2">
 		<h3 class="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-			{m.docker_info_swarm_section()}
+			{m.swarm()}
 		</h3>
 		<div class="space-y-1 rounded-lg border p-2.5">
 			{@render infoRow(m.docker_info_swarm_state_label(), swarm.LocalNodeState, false)}
 			{@render infoRow(m.docker_info_swarm_manager_label(), swarm.ControlAvailable ? m.common_yes() : m.common_no(), false)}
 			{@render infoRow(m.docker_info_swarm_node_id_label(), swarm.NodeID, true)}
 			{@render infoRow(m.docker_info_swarm_managers_label(), swarm.Managers ?? 0, false)}
-			{@render infoRow(m.docker_info_swarm_nodes_label(), swarm.Nodes ?? 0, false)}
+			{@render infoRow(m.nodes(), swarm.Nodes ?? 0, false)}
 		</div>
 	</div>
 {/snippet}

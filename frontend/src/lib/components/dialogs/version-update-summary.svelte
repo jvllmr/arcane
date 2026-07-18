@@ -43,7 +43,7 @@
 	<div class="space-y-1.5 text-xs">
 		{#if trackingTag}
 			<div class="flex items-baseline gap-2">
-				<span class="w-16 shrink-0 tracking-wide text-muted-foreground/70 uppercase">{m.update_center_tag_label()}</span>
+				<span class="w-16 shrink-0 tracking-wide text-muted-foreground/70 uppercase">{m.tag()}</span>
 				<span class="inline-flex items-center rounded-md bg-muted px-2 py-0.5 font-mono text-foreground">
 					{trackingTag}
 				</span>
@@ -51,7 +51,7 @@
 		{/if}
 		{#if currentDigest}
 			<div class="flex items-baseline gap-2">
-				<span class="w-16 shrink-0 tracking-wide text-muted-foreground/70 uppercase">{m.update_center_current_label()}</span>
+				<span class="w-16 shrink-0 tracking-wide text-muted-foreground/70 uppercase">{m.common_current()}</span>
 				<code class="min-w-0 flex-1 rounded-md bg-muted/50 px-2 py-1 font-mono text-[11px] break-all text-muted-foreground">
 					{currentDigest}
 				</code>

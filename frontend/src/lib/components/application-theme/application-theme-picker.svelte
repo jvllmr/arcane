@@ -37,7 +37,7 @@
 			description: m.application_theme_amber_description()
 		},
 		github: {
-			label: m.application_theme_github(),
+			label: m.common_github(),
 			description: m.application_theme_github_description()
 		},
 		nord: {

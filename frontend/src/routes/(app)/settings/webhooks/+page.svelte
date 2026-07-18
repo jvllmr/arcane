@@ -57,7 +57,7 @@
 		{
 			id: 'create',
 			action: 'create',
-			label: m.webhook_create_button(),
+			label: m.create_webhook(),
 			onclick: () => (isDialogOpen.create = true),
 			loading: isLoading.creating,
 			disabled: isLoading.creating
@@ -93,7 +93,7 @@
 			{#snippet children()}
 				<div class="space-y-4 py-4">
 					<div class="rounded-lg bg-muted p-4">
-						<p class="mb-2 text-sm font-medium text-muted-foreground">{m.webhook_token_label()}</p>
+						<p class="mb-2 text-sm font-medium text-muted-foreground">{m.webhook_url()}</p>
 						<Snippet
 							text={newlyCreatedWebhookUrl}
 							onCopy={(status) => {

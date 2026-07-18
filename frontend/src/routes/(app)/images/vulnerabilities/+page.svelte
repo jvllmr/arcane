@@ -67,7 +67,7 @@
 			{ key: 'high', value: summaryCounts.high, label: m.vuln_severity_high(), dotClass: 'bg-orange-500' },
 			{ key: 'medium', value: summaryCounts.medium, label: m.vuln_severity_medium(), dotClass: 'bg-amber-500' },
 			{ key: 'low', value: summaryCounts.low, label: m.vuln_severity_low(), dotClass: 'bg-emerald-500' },
-			{ key: 'unknown', value: summaryCounts.unknown, label: m.vuln_severity_unknown(), dotClass: 'bg-slate-400' }
+			{ key: 'unknown', value: summaryCounts.unknown, label: m.common_unknown(), dotClass: 'bg-slate-400' }
 		];
 		return items.filter((item) => item.value > 0);
 	});
@@ -79,7 +79,7 @@
 				summary: {
 					fetch: () => vulnerabilityService.getEnvironmentSummary(),
 					onSuccess: (data) => (summary = data),
-					errorMessage: m.common_refresh_failed({ resource: m.security_title() })
+					errorMessage: m.common_refresh_failed({ resource: m.security() })
 				},
 				vulnerabilities: {
 					fetch: () => vulnerabilityService.getAllVulnerabilities(requestForApi),
@@ -275,9 +275,7 @@
 			buttons.push({
 				id: 'scan-all',
 				action: 'base',
-				label: isLoading.scanningAll
-					? `${m.security_scanning()} (${scanProgress.current}/${scanProgress.total})`
-					: m.security_scan_all(),
+				label: isLoading.scanningAll ? `${m.scanning()} (${scanProgress.current}/${scanProgress.total})` : m.security_scan_all(),
 				onclick: scanAllImages,
 				loading: isLoading.scanningAll,
 				disabled: isLoading.scanningAll || isLoading.refreshing,
@@ -296,7 +294,7 @@
 	});
 </script>
 
-<ResourcePageLayout title={m.security_title()} subtitle={m.security_subtitle()} {actionButtons}>
+<ResourcePageLayout title={m.security()} subtitle={m.security_subtitle()} {actionButtons}>
 	{#snippet mainContent()}
 		<div class="space-y-6">
 			<!-- Minimal overview: one compact block -->

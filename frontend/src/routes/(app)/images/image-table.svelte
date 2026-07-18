@@ -101,9 +101,9 @@
 			checkboxes: [{ id: 'force', label: m.images_remove_force_label(), initialState: false }],
 			run: (id, checkboxStates) => imageService.deleteImage(id, { force: !!checkboxStates['force'] }),
 			messages: {
-				success: (count) => (count === 1 ? m.images_remove_success_one() : m.images_remove_success_many({ count })),
-				partial: (success, total, failed) => m.common_bulk_remove_partial({ success, total, failed, resource: m.images_title() }),
-				failure: () => (ids.length === 1 ? m.images_remove_failed_one() : m.images_remove_failed_many({ count: ids.length }))
+				success: (count) => (count === 1 ? m.image_removed_successfully() : m.images_remove_success_many({ count })),
+				partial: (success, total, failed) => m.common_bulk_remove_partial({ success, total, failed, resource: m.images() }),
+				failure: () => (ids.length === 1 ? m.failed_to_remove_image() : m.images_remove_failed_many({ count: ids.length }))
 			},
 			setLoading: (loading) => (isLoading.removing = loading),
 			onComplete: async (result) => {
@@ -134,10 +134,10 @@
 					const result = await tryCatch(imageService.deleteImage(id, { force }));
 					handleApiResultWithCallbacks({
 						result,
-						message: m.images_remove_failed(),
+						message: m.failed_to_remove_image(),
 						setLoadingState: () => {},
 						onSuccess: async (data) => {
-							toast.success(m.images_remove_success(), activityToastOptions(extractActivityId(data)));
+							toast.success(m.image_removed_successfully(), activityToastOptions(extractActivityId(data)));
 							await refreshImages();
 						}
 					});
@@ -339,7 +339,7 @@
 
 	const columns = [
 		{ accessorKey: 'id', title: m.common_id(), hidden: true },
-		{ accessorKey: 'repo', title: m.images_repository(), sortable: true, cell: RepoCell },
+		{ accessorKey: 'repo', title: m.resource_repository_cap(), sortable: true, cell: RepoCell },
 		{ accessorKey: 'repoTags', title: m.common_tags(), cell: TagCell },
 		{
 			accessorKey: 'inUse',
@@ -362,7 +362,7 @@
 				if (row.updateInfo) return 'up_to_date';
 				return 'unknown';
 			},
-			title: m.images_updates(),
+			title: m.updates(),
 			cell: UpdatesCell,
 			align: 'center',
 			class: 'text-center'
@@ -397,7 +397,7 @@
 		{ id: 'repoTags', label: m.common_tags(), defaultVisible: true },
 		{ id: 'inUse', label: m.common_status(), defaultVisible: true },
 		{ id: 'usedBy', label: m.images_used_by(), defaultVisible: false },
-		{ id: 'updates', label: m.images_updates(), defaultVisible: false },
+		{ id: 'updates', label: m.updates(), defaultVisible: false },
 		{ id: 'vulnerabilities', label: m.vuln_title(), defaultVisible: false },
 		{ id: 'size', label: m.common_size(), defaultVisible: true },
 		{ id: 'created', label: m.common_created(), defaultVisible: true }
@@ -664,7 +664,7 @@
 				{:else}
 					<DownloadIcon class="size-4" />
 				{/if}
-				{m.images_pull()}
+				{m.pull()}
 			</DropdownMenu.Item>
 		{/if}
 

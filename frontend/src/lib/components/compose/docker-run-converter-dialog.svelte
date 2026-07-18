@@ -63,7 +63,7 @@
 
 		<div class="max-h-[60vh] space-y-4 overflow-y-auto">
 			<div class="space-y-2">
-				<Label for="dockerRunCommand">{m.compose_docker_run_command_label()}</Label>
+				<Label for="dockerRunCommand">{m.docker_run_command()}</Label>
 				<Textarea
 					id="dockerRunCommand"
 					bind:value={dockerRunCommand}

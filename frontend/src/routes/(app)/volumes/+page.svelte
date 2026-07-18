@@ -130,7 +130,7 @@
 			iconColor: 'text-blue-500'
 		},
 		{
-			title: m.volumes_stat_unused(),
+			title: m.unused_volumes(),
 			value: volumeUsageCounts.unused,
 			icon: VolumeUnusedIcon,
 			iconColor: 'text-amber-500'
@@ -138,7 +138,7 @@
 	]);
 </script>
 
-<ResourcePageLayout title={m.volumes_title()} subtitle={m.volumes_subtitle()} {actionButtons} {statCards}>
+<ResourcePageLayout title={m.resource_volumes_cap()} subtitle={m.volumes_subtitle()} {actionButtons} {statCards}>
 	{#snippet mainContent()}
 		{#if resourcesReady}
 			<VolumeTable

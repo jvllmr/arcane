@@ -41,7 +41,7 @@
 			<div class="flex flex-col space-y-1.5">
 				<Card.Title>
 					<h2>
-						{m.containers_networks_title()}
+						{m.resource_networks_cap()}
 					</h2>
 				</Card.Title>
 				<Card.Description>{m.containers_networks_description()}</Card.Description>
@@ -124,7 +124,7 @@
 									{#if rawNetworkConfig.networkId}
 										<Card.Root variant="outlined" class="sm:col-span-2">
 											<Card.Content class="flex flex-col p-3">
-												<div class="mb-2 text-xs font-semibold text-muted-foreground">{m.container_network_id()}</div>
+												<div class="mb-2 text-xs font-semibold text-muted-foreground">{m.network_id()}</div>
 												<div
 													class="cursor-pointer font-mono text-sm font-medium break-all text-foreground select-all"
 													title={m.common_click_to_select()}

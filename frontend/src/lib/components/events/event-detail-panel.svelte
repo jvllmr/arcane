@@ -25,7 +25,7 @@
 			return matchedEnvironment.name;
 		}
 		if (event.environmentId === LOCAL_DOCKER_ENVIRONMENT_ID) {
-			return m.environments_local_badge();
+			return m.local();
 		}
 		return event.environmentId;
 	});
@@ -86,7 +86,7 @@
 			{#if environmentName}
 				<span class="text-border">•</span>
 				<div class="flex items-center gap-1.5">
-					<span>{m.events_environment_label()}</span>
+					<span>{m.resource_environment_cap()}</span>
 					<span class="font-medium text-foreground">{environmentName}</span>
 				</div>
 			{/if}

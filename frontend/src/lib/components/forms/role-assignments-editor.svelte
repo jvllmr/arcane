@@ -26,7 +26,7 @@
 
 	let { assignments = $bindable([]), roles, environments, disabled = false }: Props = $props();
 
-	const envOptions = $derived(buildGlobalEnvironmentOptions(environments, m.users_role_assignments_scope_global()));
+	const envOptions = $derived(buildGlobalEnvironmentOptions(environments, m.global_org_wide()));
 	const selectedLabel = $derived(createRoleEnvironmentLabelers(roles, envOptions, m.common_select_option()));
 
 	const quickPresetRoles = $derived(roles.filter((role) => role.id === BUILT_IN_ROLE_EDITOR || role.id === BUILT_IN_ROLE_ADMIN));
@@ -114,7 +114,7 @@
 					<div class="flex flex-col gap-1">
 						<div class="flex items-center gap-2">
 							<Badge variant={getRoleVariant(role.id)} size="sm">{role.name}</Badge>
-							<span class="text-xs text-muted-foreground">{m.users_role_assignments_scope_global()}</span>
+							<span class="text-xs text-muted-foreground">{m.global_org_wide()}</span>
 						</div>
 						{#if role.description}
 							<span class="text-xs text-muted-foreground">{role.description}</span>
@@ -140,7 +140,7 @@
 				{disabled}
 				onValueChange={(v) => updateAssignment(index, { environmentId: selectValueToEnvId(v) })}
 			>
-				<Select.Trigger class="w-full" aria-label={m.users_role_assignments_environment()}>
+				<Select.Trigger class="w-full" aria-label={m.resource_environment_cap()}>
 					<span>{selectedLabel.environment(envValue)}</span>
 				</Select.Trigger>
 				<Select.Content>
@@ -162,7 +162,7 @@
 				{disabled}
 				onValueChange={(v) => updateAssignment(index, { roleId: v })}
 			>
-				<Select.Trigger class="w-full" aria-label={m.users_role_assignments_role()}>
+				<Select.Trigger class="w-full" aria-label={m.common_role()}>
 					<span class="flex items-center gap-2">
 						<span>{selectedLabel.role(assignment.roleId)}</span>
 					</span>
@@ -190,7 +190,7 @@
 				onclick={() => removeAssignment(index)}
 				{disabled}
 				class="justify-self-end text-muted-foreground hover:text-destructive"
-				customLabel={m.users_role_assignments_remove()}
+				customLabel={m.common_remove()}
 			/>
 		</div>
 	{/each}

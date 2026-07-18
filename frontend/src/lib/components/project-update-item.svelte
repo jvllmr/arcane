@@ -35,7 +35,7 @@
 
 	const summaryText = $derived.by(() => {
 		if (imageCount <= 0) return null;
-		return `${checkedImageCount} / ${imageCount} ${String(m.images_title()).toLowerCase()}`;
+		return `${checkedImageCount} / ${imageCount} ${String(m.images()).toLowerCase()}`;
 	});
 
 	const lastCheckedAtLabel = $derived.by(() => {

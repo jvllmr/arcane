@@ -336,7 +336,7 @@
 										class="size-8"
 										icon={SettingsIcon}
 										showLabel={false}
-										customLabel={m.settings_title()}
+										customLabel={m.settings()}
 										onclick={() => handleOpenSettings(env)}
 									/>
 								</div>

@@ -160,17 +160,17 @@
 	function statusLabel(status: UpdateAllEnvironmentStatus): string {
 		switch (status) {
 			case 'updating':
-				return m.environments_update_all_status_updating();
+				return m.common_action_updating();
 			case 'updated':
-				return m.environments_update_all_status_updated();
+				return m.common_updated();
 			case 'triggered':
 				return m.environments_update_all_status_triggered();
 			case 'skipped_offline':
 				return m.environments_update_all_status_skipped_offline();
 			case 'failed':
-				return m.environments_update_all_status_failed();
+				return m.common_failed();
 			default:
-				return m.environments_update_all_status_pending();
+				return m.common_pending();
 		}
 	}
 </script>
@@ -315,7 +315,7 @@
 			{#if phase === 'confirm'}
 				<Button variant="outline" onclick={() => (open = false)}>{m.common_cancel()}</Button>
 				{#if canConfirm}
-					<Button onclick={handleConfirm}>{m.environments_update_all_confirm()}</Button>
+					<Button onclick={handleConfirm}>{m.update_all()}</Button>
 				{/if}
 			{:else}
 				<Button variant="outline" onclick={handleClose}>{m.common_close()}</Button>

@@ -36,14 +36,14 @@ export function eventSeverityVariant(severity: string): EventBadgeVariant {
 export function eventSeverityLabel(severity: string): string {
 	switch (severity) {
 		case 'success':
-			return m.events_success();
+			return m.common_success();
 		case 'error':
-			return m.events_error();
+			return m.common_error();
 		case 'warning':
-			return m.events_warning();
+			return m.warning();
 		case 'info':
 		default:
-			return m.events_info();
+			return m.info();
 	}
 }
 
@@ -65,15 +65,15 @@ function eventTypeCategory(type: string): string {
 }
 
 const categoryLabels: Record<string, () => string> = {
-	container: m.resource_container_cap,
-	image: m.resource_image_cap,
+	container: m.container,
+	image: m.common_image,
 	project: m.project,
-	git: m.git_title,
+	git: m.git,
 	volume: m.resource_volume_cap,
 	network: m.resource_network_cap,
 	environment: m.resource_environment_cap,
-	user: m.resource_user_cap,
-	system: m.sidebar_system_mode,
+	user: m.common_user,
+	system: m.system,
 	webhook: m.events_category_webhook,
 	notification: m.events_category_notification,
 	lifecycle: m.security_lifecycle_tab

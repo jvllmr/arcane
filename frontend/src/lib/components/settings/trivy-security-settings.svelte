@@ -59,7 +59,7 @@
 	const baseTrivyNetworkOptions: TrivyNetworkOption[] = [
 		{
 			value: '',
-			label: m.security_trivy_network_auto_label(),
+			label: m.auto(),
 			description: m.security_trivy_network_auto_description()
 		},
 		{ value: 'bridge', label: 'bridge' },

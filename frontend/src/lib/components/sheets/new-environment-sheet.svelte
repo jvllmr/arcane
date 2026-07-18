@@ -282,9 +282,9 @@
 						</div>
 					{:else if createdEnvironment.dockerRun && createdEnvironment.dockerCompose}
 						<AgentCommandBlock
-							dockerRunLabel={m.environments_docker_run_command()}
+							dockerRunLabel={m.docker_run_command()}
 							dockerRun={createdEnvironment.dockerRun}
-							dockerComposeLabel={m.environments_docker_compose()}
+							dockerComposeLabel={m.common_docker_compose()}
 							dockerCompose={createdEnvironment.dockerCompose}
 						/>
 					{/if}

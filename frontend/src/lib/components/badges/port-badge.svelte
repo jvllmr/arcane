@@ -121,7 +121,7 @@
 				</ArcaneTooltip.Trigger>
 				<ArcaneTooltip.Content>
 					<p class="text-xs">
-						{m.ports_published_label()}: {p.ip ?? '0.0.0.0'}:{p.hostPort} → {p.containerPort}{p.proto ? `/${p.proto}` : ''}
+						{m.published()}: {p.ip ?? '0.0.0.0'}:{p.hostPort} → {p.containerPort}{p.proto ? `/${p.proto}` : ''}
 					</p>
 				</ArcaneTooltip.Content>
 			</ArcaneTooltip.Root>

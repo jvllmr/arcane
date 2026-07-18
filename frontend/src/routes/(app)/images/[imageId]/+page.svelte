@@ -220,10 +220,10 @@
 					const force = !!checkboxStates['force'];
 					await handleApiResultWithCallbacks({
 						result: await tryCatch(imageService.deleteImage(id, { force })),
-						message: m.images_remove_failed(),
+						message: m.failed_to_remove_image(),
 						setLoadingState: (value) => (isLoading.removing = value),
 						onSuccess: async (data) => {
-							toast.success(m.images_remove_success(), activityToastOptions(extractActivityId(data)));
+							toast.success(m.image_removed_successfully(), activityToastOptions(extractActivityId(data)));
 							goto('/images');
 						}
 					});
@@ -286,7 +286,7 @@
 	});
 </script>
 
-<ResourceDetailLayout backUrl="/images" backLabel={m.images_title()} title={image?.repoTags?.[0] || shortId} {actions}>
+<ResourceDetailLayout backUrl="/images" backLabel={m.images()} title={image?.repoTags?.[0] || shortId} {actions}>
 	{#if image}
 		<div class="space-y-6">
 			{#snippet tile(label: string, value: string, opts?: { mono?: boolean; class?: string })}
@@ -383,10 +383,10 @@
 		</div>
 	{:else}
 		<div class="py-12 text-center">
-			<p class="text-lg font-medium text-muted-foreground">{m.common_not_found_title({ resource: m.images_title() })}</p>
+			<p class="text-lg font-medium text-muted-foreground">{m.common_not_found_title({ resource: m.images() })}</p>
 			<ArcaneButton
 				action="cancel"
-				customLabel={m.common_back_to({ resource: m.images_title() })}
+				customLabel={m.common_back_to({ resource: m.images() })}
 				onclick={() => goto('/images')}
 				size="sm"
 				class="mt-4"

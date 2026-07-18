@@ -141,7 +141,7 @@
 							indeterminate={isIndeterminate}
 							{disabled}
 							onCheckedChange={(checked) => toggleGroup(group.resource, checked === true)}
-							aria-label={m.permissions_select_all()}
+							aria-label={m.common_select_all()}
 						/>
 						<Accordion.Trigger class="flex-1 py-2 text-left text-sm font-medium">
 							<div class="flex flex-1 items-center justify-between gap-2 pr-2">
@@ -153,7 +153,7 @@
 									})}
 								</span>
 								<Badge variant={group.resource.scope === 'global' ? 'amber' : 'blue'} size="sm"
-									>{group.resource.scope === 'global' ? m.permissions_scope_global() : m.permissions_scope_env()}</Badge
+									>{group.resource.scope === 'global' ? m.global() : m.permissions_scope_env()}</Badge
 								>
 							</div>
 						</Accordion.Trigger>

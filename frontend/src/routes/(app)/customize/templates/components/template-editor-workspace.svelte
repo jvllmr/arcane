@@ -106,7 +106,7 @@
 					<div class="max-w-2xl">
 						<FormInput
 							input={$inputs.description}
-							label={m.templates_template_description_label()}
+							label={m.common_description()}
 							placeholder={m.templates_template_description_placeholder()}
 							disabled={saving}
 						/>

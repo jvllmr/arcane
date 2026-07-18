@@ -359,7 +359,7 @@
 	]);
 
 	const mainTabItems = $derived([
-		{ value: 'build', label: m.manual_build_workspace() },
+		{ value: 'build', label: m.build_workspace() },
 		{ value: 'history', label: m.builds() }
 	]);
 
@@ -409,7 +409,7 @@
 		},
 		{
 			accessorKey: 'durationMs',
-			title: m.build_duration_label(),
+			title: m.duration(),
 			cell: BuildHistoryDurationCell
 		}
 	] satisfies ColumnSpec<ImageBuildRecord>[];
@@ -420,7 +420,7 @@
 		{ id: 'context', label: m.build_context(), defaultVisible: true },
 		{ id: 'provider', label: m.build_provider(), defaultVisible: true },
 		{ id: 'createdAt', label: m.common_created(), defaultVisible: true },
-		{ id: 'durationMs', label: m.build_duration_label(), defaultVisible: false }
+		{ id: 'durationMs', label: m.duration(), defaultVisible: false }
 	];
 
 	onMount(() => {
@@ -963,7 +963,7 @@
 				show: mobileFieldVisibility['createdAt'] ?? true
 			},
 			{
-				label: m.build_duration_label(),
+				label: m.duration(),
 				getValue: (item: ImageBuildRecord) => formatDuration(item.durationMs ?? 0),
 				icon: ArrowDownIcon,
 				iconVariant: 'gray' as const,
@@ -1056,7 +1056,7 @@
 								</div>
 								<div class="rounded-lg border border-border/60 bg-zinc-950/40 p-3">
 									<div class="text-[10px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-										{m.target_label()}
+										{m.target()}
 									</div>
 									<div class="mt-2 text-xs">{buildHistorySelected.target || '-'}</div>
 								</div>
@@ -1094,7 +1094,7 @@
 								</div>
 								<div class="rounded-lg border border-border/60 bg-zinc-950/40 p-3">
 									<div class="text-[10px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-										{m.build_network_label()}
+										{m.resource_network_cap()}
 									</div>
 									<div class="mt-2 text-xs">{buildHistorySelected.network || '-'}</div>
 								</div>
@@ -1136,7 +1136,7 @@
 								</div>
 								<div class="rounded-lg border border-border/60 bg-zinc-950/40 p-3">
 									<div class="text-[10px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-										{m.build_isolation_label()}
+										{m.isolation()}
 									</div>
 									<div class="mt-2 text-xs">{buildHistorySelected.isolation || '-'}</div>
 								</div>
@@ -1329,14 +1329,14 @@
 {/snippet}
 
 {#if isDesktop}
-	<ResourceDetailLayout title={m.manual_build_workspace()} subtitle={m.manual_build_workspace_subtitle()}>
+	<ResourceDetailLayout title={m.build_workspace()} subtitle={m.manual_build_workspace_subtitle()}>
 		<Tabs.Root value={mainTab} onValueChange={mainUrlTab.select} class="flex h-[calc(100vh-12rem)] flex-col">
 			<Tabs.List class="mb-3 flex w-fit gap-2 rounded-lg border border-border/60 bg-muted/60 p-1">
 				<Tabs.Trigger
 					value="build"
 					class="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground data-[state=active]:bg-primary/10 data-[state=active]:text-foreground"
 				>
-					{m.manual_build_workspace()}
+					{m.build_workspace()}
 				</Tabs.Trigger>
 				<Tabs.Trigger
 					value="history"
@@ -1387,7 +1387,7 @@
 					<h1 class="text-2xl font-semibold tracking-tight">{m.builds()}</h1>
 					<p class="text-sm text-muted-foreground">{m.build_output()}</p>
 				{:else}
-					<h1 class="text-2xl font-semibold tracking-tight">{m.manual_build_workspace()}</h1>
+					<h1 class="text-2xl font-semibold tracking-tight">{m.build_workspace()}</h1>
 					<p class="text-sm text-muted-foreground">{m.manual_build_workspace_subtitle()}</p>
 				{/if}
 			</div>
@@ -1410,7 +1410,7 @@
 					>
 						{#snippet headerInfo()}
 							<div class="flex flex-col gap-1">
-								<h2 class="text-lg font-semibold">{m.manual_build_workspace()}</h2>
+								<h2 class="text-lg font-semibold">{m.build_workspace()}</h2>
 								<p class="text-xs text-muted-foreground">{m.manual_build_workspace_subtitle()}</p>
 							</div>
 						{/snippet}

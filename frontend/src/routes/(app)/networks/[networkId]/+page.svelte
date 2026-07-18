@@ -121,7 +121,7 @@
 
 <ResourceDetailLayout
 	backUrl="/networks"
-	backLabel={m.networks_title()}
+	backLabel={m.resource_networks_cap()}
 	title={network?.name ?? m.common_details_title({ resource: m.resource_network_cap() })}
 	subtitle={`${m.common_id()}: ${shortId}`}
 	{actions}
@@ -264,7 +264,7 @@
 				<Card.Root>
 					<Card.Header icon={LayersIcon}>
 						<div class="flex flex-col space-y-1.5">
-							<Card.Title>{m.networks_services_title()}</Card.Title>
+							<Card.Title>{m.services()}</Card.Title>
 							<Card.Description>{m.networks_services_description()}</Card.Description>
 						</div>
 					</Card.Header>
@@ -275,9 +275,7 @@
 									<Card.Content class="p-4">
 										<div class="space-y-2">
 											<div class="flex flex-col sm:flex-row sm:items-center">
-												<span class="w-full text-sm font-medium text-muted-foreground sm:w-24"
-													>{m.networks_service_name_label()}:</span
-												>
+												<span class="w-full text-sm font-medium text-muted-foreground sm:w-24">{m.common_name()}:</span>
 												<code
 													class="mt-1 rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground sm:mt-0 sm:text-sm"
 												>
@@ -298,9 +296,7 @@
 											{/if}
 											{#if service.Ports && service.Ports.length > 0}
 												<div class="flex flex-col sm:flex-row sm:items-start">
-													<span class="w-full text-sm font-medium text-muted-foreground sm:w-24"
-														>{m.networks_service_ports_label()}:</span
-													>
+													<span class="w-full text-sm font-medium text-muted-foreground sm:w-24">{m.common_ports()}:</span>
 													<div class="flex flex-wrap gap-1">
 														{#each service.Ports as port (port)}
 															<code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground sm:text-sm">
@@ -347,9 +343,7 @@
 
 											{#if config.gateway}
 												<div class="flex flex-col sm:flex-row sm:items-center">
-													<span class="w-full text-sm font-medium text-muted-foreground sm:w-24"
-														>{m.networks_ipam_gateway_label()}:</span
-													>
+													<span class="w-full text-sm font-medium text-muted-foreground sm:w-24">{m.common_gateway()}:</span>
 													<code
 														class="mt-1 cursor-pointer rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground select-all sm:mt-0 sm:text-sm"
 														title={m.common_click_to_select()}
@@ -520,11 +514,13 @@
 			<div class="mb-4 rounded-full bg-muted/30 p-4">
 				<NetworksIcon class="size-10 text-muted-foreground opacity-70" />
 			</div>
-			<h2 class="mb-2 text-xl font-medium">{m.common_not_found_title({ resource: m.networks_title() })}</h2>
-			<p class="mb-6 text-muted-foreground">{m.common_not_found_description({ resource: m.networks_title().toLowerCase() })}</p>
+			<h2 class="mb-2 text-xl font-medium">{m.common_not_found_title({ resource: m.resource_networks_cap() })}</h2>
+			<p class="mb-6 text-muted-foreground">
+				{m.common_not_found_description({ resource: m.resource_networks_cap().toLowerCase() })}
+			</p>
 			<ArcaneButton
 				action="cancel"
-				customLabel={m.common_back_to({ resource: m.networks_title() })}
+				customLabel={m.common_back_to({ resource: m.resource_networks_cap() })}
 				onclick={() => goto('/networks')}
 				size="sm"
 			/>

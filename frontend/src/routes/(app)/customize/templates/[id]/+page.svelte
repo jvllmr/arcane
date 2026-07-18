@@ -246,7 +246,7 @@
 				onclick={handleSave}
 				disabled={!canSave}
 				loading={status.saving}
-				loadingLabel={m.common_action_saving()}
+				loadingLabel={m.common_saving()}
 			/>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
@@ -334,7 +334,7 @@
 					<dl class="space-y-2 text-sm">
 						{#if template.registry?.name}
 							<div class="flex items-center justify-between gap-4">
-								<dt class="shrink-0 text-muted-foreground">{m.resource_registry_cap()}</dt>
+								<dt class="shrink-0 text-muted-foreground">{m.common_registry()}</dt>
 								<dd class="min-w-0 text-right font-medium break-words">{template.registry.name}</dd>
 							</div>
 						{/if}

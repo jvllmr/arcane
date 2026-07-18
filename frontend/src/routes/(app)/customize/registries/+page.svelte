@@ -105,7 +105,7 @@
 			buttons.push({
 				id: 'create',
 				action: 'create',
-				label: m.common_add_button({ resource: m.resource_registry_cap() }),
+				label: m.common_add_button({ resource: m.common_registry() }),
 				onclick: openCreateRegistryDialog
 			});
 		}

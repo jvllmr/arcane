@@ -229,7 +229,7 @@
 			<div class="grid gap-3 md:grid-cols-2">
 				<ContainerLogStatMonitor
 					icon={CpuIcon}
-					label={m.dashboard_meter_cpu()}
+					label={m.cpu_usage()}
 					value={cpuValue}
 					detail={cpuDetail}
 					history={cpuHistory}
@@ -240,7 +240,7 @@
 				/>
 				<ContainerLogStatMonitor
 					icon={MemoryStickIcon}
-					label={m.dashboard_meter_memory()}
+					label={m.memory_usage()}
 					value={memoryValue}
 					detail={memoryDetail}
 					history={memoryHistory}

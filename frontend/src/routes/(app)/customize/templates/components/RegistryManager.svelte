@@ -35,7 +35,7 @@
 		<ArcaneButton
 			action="create"
 			onclick={onAddRegistry}
-			customLabel={m.common_add_button({ resource: m.resource_registry_cap() })}
+			customLabel={m.common_add_button({ resource: m.common_registry() })}
 			class="w-full sm:w-auto"
 		/>
 	</div>

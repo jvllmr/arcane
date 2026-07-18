@@ -37,7 +37,7 @@
 	const canManageFederatedCredentials = $derived(isGlobalAdmin());
 
 	function getStatusText(credential: FederatedCredential): string {
-		if (isPastDate(credential.expiresAt)) return m.federated_credential_status_expired();
+		if (isPastDate(credential.expiresAt)) return m.expired();
 		if (!credential.enabled) return m.common_disabled();
 		return m.common_enabled();
 	}
@@ -49,7 +49,7 @@
 	}
 
 	function getScope(credential: FederatedCredential): string {
-		return credential.environmentName || m.federated_credential_scope_global_option();
+		return credential.environmentName || m.global();
 	}
 
 	function getRoleScope(credential: FederatedCredential): string {
@@ -134,14 +134,14 @@
 		{ accessorKey: 'subjectMatch', title: m.federated_credential_subject_match_label(), sortable: true, cell: SubjectCell },
 		{ accessorKey: 'roleId', title: m.federated_credential_role_scope_column(), sortable: false, cell: RoleScopeCell },
 		{ accessorKey: 'enabled', title: m.common_status(), sortable: true, cell: StatusCell },
-		{ accessorKey: 'lastUsedAt', title: m.federated_credential_last_used(), sortable: true, cell: LastUsedCell }
+		{ accessorKey: 'lastUsedAt', title: m.last_used(), sortable: true, cell: LastUsedCell }
 	] satisfies ColumnSpec<FederatedCredential>[];
 
 	const mobileFields = [
 		{ id: 'issuerUrl', label: m.federated_credential_issuer_label(), defaultVisible: true },
 		{ id: 'subjectMatch', label: m.federated_credential_subject_match_label(), defaultVisible: true },
 		{ id: 'roleScope', label: m.federated_credential_role_scope_column(), defaultVisible: true },
-		{ id: 'lastUsedAt', label: m.federated_credential_last_used(), defaultVisible: true }
+		{ id: 'lastUsedAt', label: m.last_used(), defaultVisible: true }
 	];
 
 	const bulkActions = $derived.by<BulkAction[]>(() => {
@@ -223,7 +223,7 @@
 				show: mobileFieldVisibility['roleScope'] ?? true
 			},
 			{
-				label: m.federated_credential_last_used(),
+				label: m.last_used(),
 				getValue: (item: FederatedCredential) => formatOptionalDateTime(item.lastUsedAt),
 				icon: LockIcon,
 				iconVariant: 'gray' as const,

@@ -98,7 +98,7 @@
 					</div>
 					<div class="min-w-0 flex-1">
 						<div class="text-xs font-medium tracking-widest text-muted-foreground/70 uppercase">
-							{m.sidebar_environment_label()}
+							{m.resource_environment_cap()}
 						</div>
 						<div class="text-sm font-medium text-foreground">
 							{environmentStore.selected ? environmentStore.selected.name : m.sidebar_no_environment()}

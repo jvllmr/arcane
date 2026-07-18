@@ -99,7 +99,7 @@
 </script>
 
 {#if volume}
-	<TabbedPageLayout backUrl="/volumes" backLabel={m.volumes_title()} {tabItems} {selectedTab} {onTabChange}>
+	<TabbedPageLayout backUrl="/volumes" backLabel={m.resource_volumes_cap()} {tabItems} {selectedTab} {onTabChange}>
 		{#snippet headerInfo()}
 			<div class="flex flex-col gap-1">
 				<h1 class="text-2xl font-semibold tracking-tight break-all sm:text-3xl">{volume.name}</h1>
@@ -272,19 +272,19 @@
 		{/snippet}
 	</TabbedPageLayout>
 {:else}
-	<ResourceDetailLayout backUrl="/volumes" backLabel={m.volumes_title()} title={m.volumes_volume()} {actions}>
+	<ResourceDetailLayout backUrl="/volumes" backLabel={m.resource_volumes_cap()} title={m.resource_volume_cap()} {actions}>
 		<div class="flex flex-col items-center justify-center px-4 py-16 text-center">
 			<div class="mb-4 rounded-full bg-muted/30 p-4">
 				<BoxIcon class="size-10 text-muted-foreground opacity-70" />
 			</div>
-			<h2 class="mb-2 text-xl font-medium">{m.common_not_found_title({ resource: m.volumes_title() })}</h2>
+			<h2 class="mb-2 text-xl font-medium">{m.common_not_found_title({ resource: m.resource_volumes_cap() })}</h2>
 			<p class="mb-6 text-muted-foreground">
-				{m.common_not_found_description({ resource: m.volumes_title().toLowerCase() })}
+				{m.common_not_found_description({ resource: m.resource_volumes_cap().toLowerCase() })}
 			</p>
 
 			<ArcaneButton
 				action="cancel"
-				customLabel={m.common_back_to({ resource: m.volumes_title() })}
+				customLabel={m.common_back_to({ resource: m.resource_volumes_cap() })}
 				onclick={() => goto('/volumes')}
 				size="sm"
 			/>
