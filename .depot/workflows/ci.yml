@@ -64,8 +64,8 @@ jobs:
         uses: depot/cache-mount@v1
         with:
           path: /tmp/arcane-ci-cache
-          name: getarcaneapp-arcane-main-ci
-          write-lock: /tmp/arcane-ci-cache/go-tests/${{ matrix.module.name }}
+          name: getarcaneapp-arcane-main-ci-go-tests-${{ matrix.module.name }}
+          write-lock: /tmp/arcane-ci-cache
 
       - name: Install GCC
         if: matrix.module.gcc
@@ -124,8 +124,8 @@ jobs:
         uses: depot/cache-mount@v1
         with:
           path: /tmp/arcane-ci-cache
-          name: getarcaneapp-arcane-main-ci
-          write-lock: /tmp/arcane-ci-cache/go-linter/${{ matrix.module.name }}
+          name: getarcaneapp-arcane-main-ci-go-linter-${{ matrix.module.name }}
+          write-lock: /tmp/arcane-ci-cache
 
       - name: Run Golangci-lint
         uses: golangci/golangci-lint-action@v9.3.0
@@ -156,8 +156,8 @@ jobs:
         uses: depot/cache-mount@v1
         with:
           path: /tmp/arcane-ci-cache
-          name: getarcaneapp-arcane-main-ci
-          write-lock: /tmp/arcane-ci-cache/type-check
+          name: getarcaneapp-arcane-main-ci-type-check
+          write-lock: /tmp/arcane-ci-cache
 
       - name: Configure pnpm store
         run: pnpm config set store-dir "$PNPM_STORE_DIR"
@@ -221,8 +221,8 @@ jobs:
         uses: depot/cache-mount@v1
         with:
           path: /tmp/arcane-ci-cache
-          name: getarcaneapp-arcane-main-ci
-          write-lock: /tmp/arcane-ci-cache/e2e/${{ matrix.database.name }}
+          name: getarcaneapp-arcane-main-ci-e2e-${{ matrix.database.name }}
+          write-lock: /tmp/arcane-ci-cache
 
       - name: Configure test dependency cache
         run: |
@@ -300,8 +300,8 @@ jobs:
         uses: depot/cache-mount@v1
         with:
           path: /tmp/arcane-ci-cache
-          name: getarcaneapp-arcane-main-ci
-          write-lock: /tmp/arcane-ci-cache/cli-e2e
+          name: getarcaneapp-arcane-main-ci-cli-e2e
+          write-lock: /tmp/arcane-ci-cache
 
       - name: Configure pnpm store
         run: pnpm config set store-dir "$PNPM_STORE_DIR"
